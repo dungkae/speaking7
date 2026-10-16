@@ -1,0 +1,102 @@
+/* Presentation layer. Yeti-inspired cluster/stack spacing and intrinsic columns.
+   No framework dependency: the site still opens with Live Server. */
+:root {
+  --font-body:'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --font-display:var(--font-body);
+  --studio-gap:18px;
+  --studio-accent:#9ec9ff;
+}
+body.light { --studio-accent:#285e99; }
+body { background:var(--bg); }
+.app { max-width:1540px; padding:18px 22px 80px; }
+.app-layout { gap:22px; }
+.main-area { min-width:0; }
+.side-menu { border-radius:10px; box-shadow:none; }
+.side-brand strong,.mobile-title strong,.brand,.hero h1,.question-card .q-text {
+  font-family:var(--font-body);
+}
+.side-brand-mark { font-family:var(--font-body); font-weight:700; border-radius:6px; }
+.side-label { letter-spacing:.06em; }
+.side-menu .side-link,.side-menu .side-utility { font-size:12.5px; }
+.topbar { display:flex; padding:0 0 14px; margin:0 0 20px; border-bottom:1px solid var(--border); }
+.top-right { width:100%; display:flex; flex-wrap:wrap; justify-content:flex-end; gap:8px; overflow:visible; }
+.topic-pill,.key-status,.userbar-pill { border-radius:6px; font-family:var(--font-body); font-size:11px; height:auto; min-height:30px; }
+.topic-pill { white-space:normal; }
+.topic-pill b { margin-left:4px; }
+.account-login {
+  display:inline-flex; align-items:center; justify-content:center; gap:7px;
+  flex:0 0 auto; min-height:44px; padding:0 14px; border-radius:7px;
+  border:1px solid var(--border); background:var(--surface-hi2); color:var(--text);
+  font:600 13px var(--font-body); text-decoration:none;
+  transition:background .15s,border-color .15s;
+}
+.account-login svg { width:17px; height:17px; }
+.account-login:hover { background:var(--surface-hi); border-color:var(--studio-accent); }
+a:focus-visible,button:focus-visible,.helper-content:focus-visible {
+  outline:2px solid var(--studio-accent); outline-offset:3px;
+}
+.hero { margin:0 0 24px; padding:0; }
+.hero h1 { font-size:clamp(24px,2.4vw,32px); line-height:1.25; font-weight:700; letter-spacing:-.035em; margin:0 0 8px; }
+.hero h1 .accent { color:var(--text-dim); font-weight:400; }
+.hero p { max-width:780px; font-size:13px; line-height:1.65; color:var(--text-dim); }
+/* Each panel wraps when its content would become too narrow, including when
+   the navigation is expanded. No change to source or keyboard order. */
+.columns { display:flex; flex-wrap:wrap; align-items:flex-start; gap:var(--studio-gap); }
+.columns > .panel { min-width:0; flex:1 1 340px; }
+.columns > #practicePanel { flex:1.2 1 430px; }
+.panel { border-radius:10px; box-shadow:none; }
+.panel-head { padding:16px 18px; background:var(--surface); gap:10px; }
+.panel-head h2 { font-size:15px; font-weight:700; letter-spacing:-.01em; }
+.panel-head p { font-size:11.5px; line-height:1.5; margin-top:3px; }
+.panel-head .tag { border-radius:5px; background:var(--surface-hi2); color:var(--text-dim); }
+.panel-body { padding:18px; }
+.question-card { background:transparent; border:0; border-radius:0; padding:0; margin-bottom:20px; }
+.q-index { color:var(--text-dim); font-size:11px; letter-spacing:.04em; margin-bottom:9px; }
+.question-card .q-text { font-size:20px; font-weight:600; line-height:1.5; text-decoration:none; }
+.q-bullets { font-size:13px; line-height:1.7; }
+.question-assist { margin-top:16px; padding-top:16px; }
+.suggest-title { color:var(--text-dim); font-size:12px; line-height:1.6; }
+.word-chips { display:flex; flex-wrap:wrap; gap:6px; overflow:visible; }
+.word-chip { flex:0 1 auto; min-width:0; max-width:100%; white-space:normal; overflow-wrap:anywhere; border-radius:4px; padding:5px 8px; font-size:12px; line-height:1.5; }
+.helper-tabs { display:flex; flex-wrap:wrap; gap:0; padding:0; margin-top:16px; border:0; border-bottom:1px solid var(--border); background:transparent; border-radius:0; }
+.helper-tab { flex:1 1 100px; min-height:44px; padding:9px 8px; border-radius:0; font-size:12px; border-bottom:2px solid transparent; }
+.helper-tab.active,body.light .helper-tab.active { color:var(--studio-accent); background:transparent; border-bottom-color:var(--studio-accent); box-shadow:none; }
+.helper-content { margin-top:0; padding:16px 2px 4px; background:transparent; border:0; border-radius:0; max-height:300px; overflow:auto; font-size:13px; line-height:1.65; }
+.assist-title { margin:0 0 10px; font-size:13px; }
+.assist-list { display:flex; flex-direction:column; gap:10px; }
+.assist-list li { margin:0; line-height:1.65; padding-left:14px; }
+.assist-note { margin-top:14px; font-size:11.5px; line-height:1.6; color:var(--text-dim); }
+.question-translation { margin:0; color:var(--text); font-style:normal; }
+.booth { background:var(--surface-hi); border-radius:8px; padding:15px 12px 12px; gap:9px; }
+.btn,.mini-btn,.speak-btn { border-radius:6px; }
+.bubble { font-size:13px; line-height:1.65; border-radius:8px; }
+.chat-scroll { min-height:360px; height:540px; padding:18px 16px; }
+.chat-input-row { padding:12px; }
+.quick-chips { gap:6px; }
+@media (max-width:1080px) {
+  .app { padding:8px 12px 100px; }
+  .mobile-appbar { background:var(--bg); backdrop-filter:none; }
+  .topbar { display:flex; margin-bottom:16px; padding-bottom:12px; }
+  .top-right { justify-content:flex-start; }
+  .account-login { margin-left:auto; }
+  .hero { margin-bottom:20px; }
+  .hero p { display:block; white-space:normal; overflow:visible; }
+  .columns > #practicePanel,.columns > .panel { flex-basis:100%; }
+  .helper-content { max-height:none; overflow:visible; }
+}
+@media (max-width:560px) {
+  .app { padding-left:10px; padding-right:10px; }
+  .top-right { gap:6px; }
+  .top-right .topic-pill { flex:1 1 130px; padding:6px 8px; }
+  .top-right .key-status { flex:1 1 100%; }
+  .top-right .account-login { margin-left:auto; }
+  .hero h1 { font-size:24px; }
+  .hero h1 .accent { display:block; font-size:20px; margin-top:4px; }
+  .hero p { font-size:12px; }
+  .panel-head { padding:14px; }
+  .panel-body { padding:14px; }
+  .question-card .q-text { font-size:18px; }
+  .chat-scroll { height:420px; min-height:280px; }
+  .helper-tab { flex-basis:80px; font-size:11.5px; }
+}
+@media(prefers-reduced-motion:reduce) { .account-login { transition:none; } }

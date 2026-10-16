@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Đăng ký — BAND ROOM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0A0D13;--surface:#141924;--surface-hi:#1C2330;--border:#262E40;--text:#E9ECF3;--text-dim:#8A93A8;--text-faint:#535C70;--gold:#E8B355;--teal:#4FD1C5;--red:#F2777A;--green:#79D9A9;--font-display:'Nunito',sans-serif;--font-body:'DM Sans',sans-serif;}
+  *{box-sizing:border-box;} html,body{margin:0;padding:0;}
+  body{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;color:var(--text);font-family:var(--font-body);
+    background:radial-gradient(1200px 600px at 15% -10%,rgba(232,179,85,0.06),transparent 60%),radial-gradient(1000px 500px at 100% 0%,rgba(79,209,197,0.05),transparent 55%),var(--bg);}
+  .card{width:100%;max-width:400px;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:30px 28px 26px;}
+  .brand{display:flex;align-items:center;gap:9px;font-family:var(--font-display);font-weight:700;letter-spacing:0.06em;font-size:14px;margin-bottom:22px;}
+  .brand .dot{width:9px;height:9px;border-radius:50%;background:var(--teal);box-shadow:0 0 10px rgba(79,209,197,0.7);}
+  h1{font-family:var(--font-display);font-size:23px;font-weight:800;margin:0 0 6px;}
+  .sub{color:var(--text-dim);font-size:13.5px;line-height:1.55;margin:0 0 22px;}
+  label{display:block;font-size:12.5px;color:var(--text-dim);margin:0 0 6px;}
+  input{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:11px;color:var(--text);font-family:var(--font-body);font-size:14px;padding:11px 13px;margin-bottom:15px;}
+  input:focus{outline:none;border-color:var(--teal);}
+  .btn{width:100%;font-family:var(--font-body);font-weight:600;font-size:14.5px;border-radius:12px;padding:12px;cursor:pointer;border:none;background:var(--teal);color:#08201E;transition:filter .15s;}
+  .btn:hover:not(:disabled){filter:brightness(1.08);} .btn:disabled{opacity:0.5;cursor:not-allowed;}
+  .msg{font-size:12.5px;line-height:1.5;margin:0 0 14px;min-height:16px;}
+  .msg.err{color:var(--red);} .msg.ok{color:var(--green);}
+  .foot{text-align:center;font-size:13px;color:var(--text-dim);margin-top:18px;}
+  .foot a{color:var(--teal);text-decoration:none;font-weight:600;} .foot a:hover{text-decoration:underline;}
+  .mode-note{font-size:11px;color:var(--text-faint);text-align:center;margin-top:16px;line-height:1.5;}
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="brand"><span class="dot"></span>BAND ROOM</div>
+    <h1>Đăng ký</h1>
+    <p class="sub">Tạo tài khoản để lưu lịch sử chấm bài và theo dõi tiến bộ của bạn.</p>
+    <div class="msg" id="msg"></div>
+    <form id="form" novalidate>
+      <label for="email">Email</label>
+      <input type="email" id="email" autocomplete="username" placeholder="ban@email.com">
+      <label for="pw">Mật khẩu (≥ 6 ký tự)</label>
+      <input type="password" id="pw" autocomplete="new-password" placeholder="••••••">
+      <label for="pw2">Nhập lại mật khẩu</label>
+      <input type="password" id="pw2" autocomplete="new-password" placeholder="••••••">
+      <button class="btn" id="submitBtn" type="submit">Đăng ký</button>
+    </form>
+    <div class="foot">Đã có tài khoản? <a href="login.html">Đăng nhập</a></div>
+    <div class="foot"><a href="preview.html">Dùng thử Speaking không cần đăng nhập →</a></div>
+    <div class="mode-note" id="modeNote"></div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="assets/js/features/auth/firebase-config.js"></script>
+  <script src="assets/js/features/auth/auth.js"></script>
+  <script>
+  (function(){
+    "use strict";
+    var msg = document.getElementById('msg');
+    var form = document.getElementById('form');
+    var emailEl = document.getElementById('email');
+    var pwEl = document.getElementById('pw');
+    var pw2El = document.getElementById('pw2');
+    var btn = document.getElementById('submitBtn');
+    var modeNote = document.getElementById('modeNote');
+
+    modeNote.textContent = (BRAuth.mode !== 'firebase')
+      ? 'Không kết nối được Firebase. Bạn có thể luyện tập không đăng nhập.'
+      : 'Bảo mật bằng Firebase Authentication.';
+
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      msg.textContent = ''; msg.className = 'msg';
+      btn.disabled = true; btn.textContent = 'Đang tạo tài khoản…';
+      BRAuth.signUp(emailEl.value, pwEl.value, pw2El.value).then(function(){
+        location.replace('login.html?registered=1');
+      }).catch(function(err){
+        msg.textContent = err && err.message ? err.message : 'Không tạo được tài khoản.';
+        msg.className = 'msg err';
+        btn.disabled = false; btn.textContent = 'Đăng ký';
+      });
+    });
+  })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<script src="env.js?v=4"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BAND ROOM — Phòng thu luyện nói IELTS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/base.css">
+<link rel="stylesheet" href="assets/css/sidebar.css">
+<link rel="stylesheet" href="assets/css/responsive.css">
+<link rel="stylesheet" href="assets/css/enhancements.css?v=2">
+<link rel="stylesheet" href="assets/css/studio-polish.css?v=2">
+<script src="assets/js/app/boot-guard.js"></script>
+</head>
+<body>
+<div class="startup-alert" id="startupAlert" role="alert" hidden>
+  <strong>Không thể khởi tạo đầy đủ trang.</strong>
+  <span>Có lỗi khi tải JavaScript hoặc khởi động ứng dụng. Hãy xem thông tin bên dưới, mở Console (F12) hoặc thử <a href="preview.html">bản xem thử</a>.</span>
+  <small id="startupErrorDetail"></small>
+</div>
+<div class="app">
+  <div class="mobile-appbar">
+    <button class="nav-action mobile-menu-btn" id="menuBtn" type="button" aria-label="Mở menu">
+      <span class="hamburger" aria-hidden="true"><i></i><i></i><i></i></span>
+    </button>
+    <div class="mobile-title"><strong>BAND ROOM</strong><span id="mobilePartLabel">Part 1 · Speaking</span></div>
+    <button class="nav-action mobile-history-btn" id="mobileHistoryBtn" type="button" aria-label="Mở lịch sử">◴</button>
+  </div>
+
+  <div class="file-warn" id="fileWarn">
+     <b>Trang đang mở bằng file://</b> — trình duyệt sẽ chặn gọi API (lỗi "Failed to fetch") nên chấm điểm online sẽ không chạy. Cách sửa: mở đúng thư mục dự án bằng VS Code, nhấp chuột phải <code>index.html</code> → <b>Open with Live Server</b>. Không mở file HTML trực tiếp bằng file://.
+  </div>
+
+  <div class="app-layout">
+    <aside class="side-menu" id="sideMenu" aria-label="Menu luyện thi">
+      <div class="side-brand">
+        <span class="side-brand-mark">B</span>
+        <div><strong>BAND ROOM</strong><small>IELTS Speaking</small></div>
+        <button class="sidebar-toggle" id="sidebarToggle" type="button" aria-label="Thu gọn hoặc mở rộng menu" aria-controls="sideMenu" aria-expanded="true" title="Thu gọn menu">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+        </button>
+        <button class="side-close" id="sideCloseBtn" type="button" aria-label="Đóng menu">×</button>
+      </div>
+
+      <div class="side-section topic-picker-section">
+        <label class="side-label" for="topicSelect">Chọn topic IELTS (<span id="topicCount">30</span>)</label>
+        <div class="topic-choice"><select id="topicSelect" aria-label="Chọn chủ đề bài nói"></select><button type="button" id="shuffleTopicBtn" title="Chọn chủ đề ngẫu nhiên" aria-label="Đổi ngẫu nhiên chủ đề">↻</button></div>
+      </div>
+      <div class="side-section part-picker-section" id="partPickerSection">
+        <div class="side-label">Bài luyện</div>
+        <nav class="parts" id="partNav">
+          <button class="part-btn active" data-part="1" type="button"><span class="part-number">01</span><span class="part-copy"><strong>Part 1</strong><small>Phỏng vấn mở đầu</small></span><span class="part-chevron">›</span></button>
+          <button class="part-btn" data-part="2" type="button"><span class="part-number">02</span><span class="part-copy"><strong>Part 2</strong><small>Cue Card · bài nói dài</small></span><span class="part-chevron">›</span></button>
+          <button class="part-btn" data-part="3" type="button"><span class="part-number">03</span><span class="part-copy"><strong>Part 3</strong><small>Thảo luận chuyên sâu</small></span><span class="part-chevron">›</span></button>
+        </nav>
+      </div>
+
+      <div class="side-section">
+        <div class="side-label">Cách chấm</div>
+        <div class="submode" id="subMode">
+          <button class="submode-btn active" data-mode="part" type="button"><span class="mode-dot"></span>Chấm từng Part</button>
+          <button class="submode-btn" data-mode="full" type="button"><span class="mode-dot"></span>Làm đủ 3 Part</button>
+        </div>
+      </div>
+
+      <div class="side-section side-links">
+        <div class="side-label">Điều hướng</div>
+        <button class="side-link is-active" id="practiceNavBtn" type="button"><svg class="side-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><path d="M12 19v3"/></svg><span>Luyện nói</span></button>
+        <button class="side-link" id="examinerNavBtn" type="button"><svg class="side-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 1.6 4.4L18 9l-4.4 1.6L12 15l-1.6-4.4L6 9l4.4-1.6L12 3Z"/><path d="m18.5 15 .8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8.8-2.2Z"/></svg><span>Giám khảo AI</span></button>
+        <button class="side-link" id="historyNavBtn" type="button"><svg class="side-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l3 2"/></svg><span>Lịch sử</span></button>
+        <button class="side-link" id="newSessionBtn" type="button"><svg class="side-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg><span>Phiên mới</span></button>
+        <button class="side-link" id="backBtn" type="button"><svg class="side-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg><span>Quay lại</span></button>
+      </div>
+
+      <div class="side-spacer"></div>
+      <div class="side-footer">
+        <button class="side-utility" id="sideThemeBtn" type="button"><svg class="side-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9c0-.5 0-1-.1-1.4A7 7 0 0 1 13.4 3.1C13 3 12.5 3 12 3Z"/></svg><span>Đổi sáng / tối</span></button>
+        <button class="side-utility" id="sideSettingsBtn" type="button"><svg class="side-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-2.8 2.8-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6v.1h-4V21a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1L4.2 17l.1-.1a1.7 1.7 0 0 0 .3-1.9A1.7 1.7 0 0 0 3 14H3v-4h.1a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9L4.2 7 7 4.2l.1.1a1.7 1.7 0 0 0 1.9.3 1.7 1.7 0 0 0 1-1.6V3h4v.1a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1L19.8 7l-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.6 1h.1v4H21a1.7 1.7 0 0 0-1.6 1Z"/></svg><span>Cài đặt API</span></button>
+      </div>
+    </aside>
+    <div class="drawer-scrim" id="drawerScrim"></div>
+    <main class="main-area" id="mainArea">
+  <div class="auth-notice" id="authNotice" role="status" hidden>
+    Chưa nhận được phản hồi đăng nhập. Bạn có thể <a href="login.html">mở trang đăng nhập</a> hoặc <a href="preview.html">luyện tập không cần đăng nhập</a>.
+  </div>
+  <div class="topbar">
+    <div class="brand"><span class="brand-dot idle" id="brandDot"></span>BAND ROOM</div>
+    <div class="top-right">
+      <div class="topic-pill">Chủ đề: <b id="topicPill">—</b></div>
+      <div class="topic-pill" id="modePill">Chế độ: <b>Offline (cục bộ)</b></div>
+      <div class="key-status" id="keyStatus"><span class="dot"></span><span id="keyStatusText">Chưa có API key</span></div>
+      <div class="userbar-pill" id="userPill" style="display:none">👤 <b id="userEmail">—</b></div>
+      <button class="logout-btn" id="logoutBtn" title="Đăng xuất" style="display:none">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+      </button>
+      <button class="theme-btn" id="themeBtn" title="Đổi giao diện sáng/tối">◐</button>
+      <button class="settings-btn" id="settingsBtn" title="Cài đặt API key">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="hero">
+    <h1>Luyện nói IELTS <span class="accent">theo từng Part</span></h1>
+    <p>Ghi âm, xem transcript và nhận đánh giá theo 4 tiêu chí IELTS. Chọn Part ở menu bên trái để chuyển nhanh giữa các phần.</p>
+  </div>
+
+  <div class="columns">
+
+    <div class="panel" id="practicePanel">
+      <div class="panel-head">
+        <div class="tag stt">◎</div>
+        <div>
+          <h2>Phòng luyện nói</h2>
+          <p>Xem chữ khi đang nói · Gemini phân tích audio khi chấm bài</p>
+        </div>
+      </div>
+      <div class="panel-body">
+        <div class="question-card">
+          <div class="q-index" id="qIndex">Câu 1 / 4</div>
+          <div class="q-text" id="qText">Đang tải câu hỏi…</div>
+          <ul class="q-bullets" id="qBullets" hidden></ul>
+          <button class="speak-btn" id="speakBtn" title="Nghe câu hỏi (đọc bằng giọng tiếng Anh)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg>
+            <span>Nghe câu hỏi</span>
+          </button>
+          <div class="question-assist">
+            <div class="suggest-title">Bạn hãy thử dùng các từ/cụm sau trong câu trả lời:</div>
+            <div class="word-chips" id="suggestedWords"></div>
+            <div class="helper-tabs" id="helperTabs">
+              <button class="helper-tab" data-view="hint" type="button">Xem gợi ý</button>
+              <button class="helper-tab active" data-view="ideas" type="button">Ý tưởng</button>
+              <button class="helper-tab" data-view="translate" type="button">Dịch câu hỏi?</button>
+            </div>
+            <div class="helper-content" id="helperContent" tabindex="0" role="region" aria-label="Gợi ý, ý tưởng và bản dịch"></div>
+          </div>
+        </div>
+
+        <div class="booth">
+          <div class="onair" id="onairLight">OFF AIR</div>
+          <canvas id="wave" width="360" height="64"></canvas>
+          <button class="mic-btn" id="micBtn" title="Bắt đầu nói">
+            <svg id="micIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+              <path d="M19 10v1a7 7 0 0 1-14 0v-1"></path>
+              <line x1="12" y1="19" x2="12" y2="23"></line>
+              <line x1="8" y1="23" x2="16" y2="23"></line>
+            </svg>
+          </button>
+          <div class="timer" id="timer">00:00</div>
+          <div class="status" id="statusText">Nhấn micro để bắt đầu trả lời</div>
+          <div class="live-preview" id="livePreview"><span class="placeholder">Chữ nháp thời gian thực (chưa chính thức) sẽ hiện ở đây…</span></div>
+        </div>
+
+        <div class="controls">
+          <button class="btn btn-ghost" id="nextBtn" disabled>Câu tiếp theo →</button>
+          <button class="btn btn-ghost" id="redoBtn" disabled>Ghi âm lại phần này</button>
+        </div>
+
+        <div class="answer-list" id="answerList"></div>
+        <div class="review-panel" id="reviewPanel"></div>
+
+        <div class="send-row">
+          <button class="btn btn-primary" id="sendToBotBtn" disabled>Gửi Part này cho Giám khảo AI →</button>
+          <button class="btn btn-primary" id="sendFullBtn" style="display:none" disabled>Chấm cả bài (3 Part) →</button>
+          <div class="sub-progress" id="subProgress" style="display:none">○ Part 1   ○ Part 2   ○ Part 3</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" id="aiPanel">
+      <div class="panel-head">
+        <div class="tag bot">✦</div>
+        <div>
+          <h2>Giám khảo AI</h2>
+          <p>Chấm đủ 4 tiêu chí IELTS (0–9), nhận xét toàn diện, sửa lỗi & gợi ý — hỏi lại thoải mái</p>
+        </div>
+      </div>
+      <div class="chat-scroll" id="chatScroll"></div>
+      <div class="quick-chips" id="quickChips"></div>
+      <div class="chat-input-row">
+        <textarea id="chatInput" rows="1" placeholder="Nhắn cho giám khảo AI…"></textarea>
+        <button class="send-btn" id="chatSendBtn" title="Gửi">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="panel history-panel" id="historyPanel" style="display:none">
+    <div class="panel-head">
+      <div class="tag bot">🕐</div>
+      <div>
+        <h2>LỊCH SỬ CHẤM BÀI</h2>
+        <p>Các bài chấm đã lưu vào tài khoản của bạn</p>
+      </div>
+    </div>
+    <div class="panel-body" id="historyBody"></div>
+  </div>
+
+  <p class="note" id="compatNote">Ghi âm và nhận dạng bằng trình duyệt; Gemini chấm trực tiếp qua Internet. Chấm một câu có thể gửi audio để đánh giá phát âm. Chấm Part/cả bài lần lượt phân tích từng câu cùng audio đã lưu; không có điểm phát âm hoặc Overall đầy đủ nếu thiếu audio. Lịch sử audio chỉ lưu trên thiết bị này.</p>
+    </main>
+  </div>
+</div>
+
+<div class="mobile-dock" id="mobileDock">
+  <div class="dock-inner">
+    <button class="dock-mic" id="mobileMicBtn" type="button">🎙 <span id="mobileMicLabel">Nói</span></button>
+    <button class="dock-keyboard" id="keyboardBtn" type="button" title="Nhập bằng bàn phím">⌨</button>
+  </div>
+</div>
+
+<!-- Cấu hình Gemini -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+    <h3 id="settingsTitle">Kết nối Gemini</h3>
+    <p id="serverSettingsStatus">Đang đọc cấu hình Gemini…</p>
+    <p>Mở index.html bằng Go Live trong VS Code. Khóa Gemini đã có trong cấu hình của bản dùng riêng này.</p>
+    <div class="modal-actions"><button class="btn btn-primary" id="testGeminiBtn" type="button">Kiểm tra Gemini</button><button class="btn btn-ghost" id="closeModalBtn" type="button">Đóng</button></div>
+  </div>
+</div>
+
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="assets/js/features/auth/firebase-config.js"></script>
+<script src="assets/js/features/auth/auth.js"></script>
+
+
+
+
+
+<script src="assets/js/data/topics.js"></script>
+<script src="assets/js/data/translations.js"></script>
+<script src="assets/js/data/question-hints.js?v=6"></script>
+<script src="assets/js/data/question-ideas.js"></script>
+<script src="assets/js/features/speaking/speech-to-text.js"></script>
+<script src="assets/js/features/examiner/gemini-client.js?v=4"></script>
+<script src="assets/js/features/examiner/ai-examiner-chatbot.js?v=4"></script>
+<script src="assets/js/features/history/audio-library.js"></script>
+<script src="assets/js/features/questions/question-assist.js?v=6"></script>
+<script src="assets/js/app/navigation.js"></script>
+<script src="assets/js/app/main.js?v=5"></script>
+</body>
+</html>
