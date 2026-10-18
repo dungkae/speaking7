@@ -6,7 +6,7 @@
   var SUGGESTED_PROMPTS = ['Giải thích thêm về Lexical Resource','Làm sao tăng độ trôi chảy?','Cho ví dụ câu ghép/câu phức','Góp ý cách luyện phát âm'];
   function refreshStatus() {
     var config=global.env||{};
-    var models=Array.isArray(config.GEMINI_MODELS)?config.GEMINI_MODELS:['gemini-2.5-flash','gemini-2.5-flash-lite'];
+    var models=Array.isArray(config.GEMINI_MODELS)?config.GEMINI_MODELS:['gemini-2.5-flash-lite'];
     status={configured:!!config.GEMINI_KEY,provider:'gemini',model:models[0]};
     client=global.BandRoomGemini.create({apiKey:config.GEMINI_KEY||'',model:status.model,models:models,timeoutMs:35000});
     return Promise.resolve(status);
