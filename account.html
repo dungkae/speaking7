@@ -5,14 +5,12 @@
 <script src="/api/env.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BAND ROOM — Phòng thu luyện nói IELTS</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/fonts.css">
 <link rel="stylesheet" href="assets/css/base.css">
 <link rel="stylesheet" href="assets/css/sidebar.css">
 <link rel="stylesheet" href="assets/css/responsive.css">
 <link rel="stylesheet" href="assets/css/enhancements.css?v=2">
-<link rel="stylesheet" href="assets/css/studio-polish.css?v=2">
+<link rel="stylesheet" href="assets/css/studio-polish.css?v=5">
 <script src="assets/js/app/boot-guard.js"></script>
 </head>
 <body>
@@ -37,8 +35,8 @@
   <div class="app-layout">
     <aside class="side-menu" id="sideMenu" aria-label="Menu luyện thi">
       <div class="side-brand">
-        <span class="side-brand-mark">B</span>
-        <div><strong>BAND ROOM</strong><small>IELTS Speaking</small></div>
+        <span class="side-brand-mark" aria-hidden="true">br.</span>
+        <div><strong>BAND ROOM</strong><small>Phòng luyện nói</small></div>
         <button class="sidebar-toggle" id="sidebarToggle" type="button" aria-label="Thu gọn hoặc mở rộng menu" aria-controls="sideMenu" aria-expanded="true" title="Thu gọn menu">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
         </button>
@@ -46,7 +44,7 @@
       </div>
 
       <div class="side-section topic-picker-section">
-        <label class="side-label" for="topicSelect">Chọn topic IELTS (<span id="topicCount">30</span>)</label>
+        <label class="side-label" for="topicSelect">Chủ đề luyện nói (<span id="topicCount">30</span>)</label>
         <div class="topic-choice"><select id="topicSelect" aria-label="Chọn chủ đề bài nói"></select><button type="button" id="shuffleTopicBtn" title="Chọn chủ đề ngẫu nhiên" aria-label="Đổi ngẫu nhiên chủ đề">↻</button></div>
       </div>
       <div class="side-section part-picker-section" id="partPickerSection">
@@ -67,7 +65,7 @@
       </div>
 
       <div class="side-section side-links">
-        <div class="side-label">Điều hướng</div>
+        <div class="side-label">Cá nhân</div>
         <button class="side-link is-active" id="practiceNavBtn" type="button"><svg class="side-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><path d="M12 19v3"/></svg><span>Luyện nói</span></button>
         <button class="side-link" id="examinerNavBtn" type="button"><svg class="side-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 1.6 4.4L18 9l-4.4 1.6L12 15l-1.6-4.4L6 9l4.4-1.6L12 3Z"/><path d="m18.5 15 .8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8.8-2.2Z"/></svg><span>Giám khảo AI</span></button>
         <button class="side-link" id="historyNavBtn" type="button"><svg class="side-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l3 2"/></svg><span>Lịch sử</span></button>
@@ -103,40 +101,24 @@
     </div>
   </div>
 
-  <div class="hero">
-    <h1>Luyện nói IELTS <span class="accent">theo từng Part</span></h1>
-    <p>Ghi âm, xem transcript và nhận đánh giá theo 4 tiêu chí IELTS. Chọn Part ở menu bên trái để chuyển nhanh giữa các phần.</p>
-  </div>
+  <header class="hero">
+    <div class="masthead-top"><span>IELTS SPEAKING</span><span>Ghi âm · Lắng nghe · Luyện tập</span></div>
+    <h1>band room<span>.</span></h1>
+  </header>
 
   <div class="columns">
 
     <div class="panel" id="practicePanel">
-      <div class="panel-head">
-        <div class="tag stt">◎</div>
-        <div>
-          <h2>Phòng luyện nói</h2>
-          <p>Xem chữ khi đang nói · Gemini phân tích audio khi chấm bài</p>
-        </div>
-      </div>
       <div class="panel-body">
         <div class="question-card">
           <div class="q-index" id="qIndex">Câu 1 / 4</div>
-          <div class="q-text" id="qText">Đang tải câu hỏi…</div>
-          <ul class="q-bullets" id="qBullets" hidden></ul>
+          <div class="q-text" id="qText" lang="en">Đang tải câu hỏi…</div>
+          <ul class="q-bullets" id="qBullets" lang="en" hidden></ul>
           <button class="speak-btn" id="speakBtn" title="Nghe câu hỏi (đọc bằng giọng tiếng Anh)">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg>
             <span>Nghe câu hỏi</span>
           </button>
-          <div class="question-assist">
-            <div class="suggest-title">Bạn hãy thử dùng các từ/cụm sau trong câu trả lời:</div>
-            <div class="word-chips" id="suggestedWords"></div>
-            <div class="helper-tabs" id="helperTabs">
-              <button class="helper-tab" data-view="hint" type="button">Xem gợi ý</button>
-              <button class="helper-tab active" data-view="ideas" type="button">Ý tưởng</button>
-              <button class="helper-tab" data-view="translate" type="button">Dịch câu hỏi?</button>
-            </div>
-            <div class="helper-content" id="helperContent" tabindex="0" role="region" aria-label="Gợi ý, ý tưởng và bản dịch"></div>
-          </div>
+
         </div>
 
         <div class="booth">
@@ -160,6 +142,7 @@
           <button class="btn btn-ghost" id="redoBtn" disabled>Ghi âm lại phần này</button>
         </div>
 
+
         <div class="answer-list" id="answerList"></div>
         <div class="review-panel" id="reviewPanel"></div>
 
@@ -168,15 +151,29 @@
           <button class="btn btn-primary" id="sendFullBtn" style="display:none" disabled>Chấm cả bài (3 Part) →</button>
           <div class="sub-progress" id="subProgress" style="display:none">○ Part 1   ○ Part 2   ○ Part 3</div>
         </div>
+
+        <section class="practice-notes" aria-label="Sổ tay gợi ý">
+          <div class="notes-heading"><span class="eyebrow">Sổ tay</span><span class="notes-aside">Từ vựng &amp; cách triển khai</span></div>
+          <div class="question-assist">
+            <div class="suggest-title">Từ vựng theo chủ đề</div>
+            <div class="word-chips" id="suggestedWords"></div>
+            <div class="helper-tabs" id="helperTabs">
+              <button class="helper-tab" data-view="hint" type="button">Xem gợi ý</button>
+              <button class="helper-tab active" data-view="ideas" type="button">Ý tưởng</button>
+              <button class="helper-tab" data-view="translate" type="button">Dịch câu hỏi?</button>
+            </div>
+            <div class="helper-content" id="helperContent" tabindex="0" role="region" aria-label="Gợi ý, ý tưởng và bản dịch"></div>
+          </div>
+        </section>
+
       </div>
     </div>
 
     <div class="panel" id="aiPanel">
       <div class="panel-head">
-        <div class="tag bot">✦</div>
         <div>
           <h2>Giám khảo AI</h2>
-          <p>Chấm đủ 4 tiêu chí IELTS (0–9), nhận xét toàn diện, sửa lỗi & gợi ý — hỏi lại thoải mái</p>
+          <p>Nhận xét bài nói · Hỏi thêm khi cần</p>
         </div>
       </div>
       <div class="chat-scroll" id="chatScroll"></div>
@@ -193,10 +190,9 @@
 
   <div class="panel history-panel" id="historyPanel" style="display:none">
     <div class="panel-head">
-      <div class="tag bot">🕐</div>
       <div>
-        <h2>LỊCH SỬ CHẤM BÀI</h2>
-        <p>Các bài chấm đã lưu vào tài khoản của bạn</p>
+        <h2>Bản lưu</h2>
+        <p>Những bài luyện và nhận xét bạn đã lưu.</p>
       </div>
     </div>
     <div class="panel-body" id="historyBody"></div>
@@ -209,8 +205,8 @@
 
 <div class="mobile-dock" id="mobileDock">
   <div class="dock-inner">
-    <button class="dock-mic" id="mobileMicBtn" type="button">🎙 <span id="mobileMicLabel">Nói</span></button>
-    <button class="dock-keyboard" id="keyboardBtn" type="button" title="Nhập bằng bàn phím">⌨</button>
+    <button class="dock-mic" id="mobileMicBtn" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><rect x="9" y="2" width="6" height="13" rx="3"/><path d="M5 10v2a7 7 0 0 0 14 0v-2M12 19v3m-4 0h8"/></svg> <span id="mobileMicLabel">Nói</span></button>
+    <button class="dock-keyboard" id="keyboardBtn" type="button" title="Nhập bằng bàn phím"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M6 9h1m4 0h1m4 0h1M6 12h1m4 0h1m4 0h1M7 16h10"/></svg></button>
   </div>
 </div>
 
@@ -246,5 +242,6 @@
 <script src="assets/js/features/questions/question-assist.js?v=6"></script>
 <script src="assets/js/app/navigation.js"></script>
 <script src="assets/js/app/main.js?v=5"></script>
+<script type="module" src="/src/liquid-metal-entry.tsx"></script>
 </body>
 </html>

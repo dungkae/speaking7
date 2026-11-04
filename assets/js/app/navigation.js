@@ -25,7 +25,7 @@
   }
   function init(){
     var savedTheme='';try{savedTheme=localStorage.getItem('band_room_theme')||'';}catch(e){}
-    var light=savedTheme?savedTheme==='light':(global.matchMedia && global.matchMedia('(prefers-color-scheme: light)').matches);
+    var light=savedTheme==='light';
     body.classList.toggle('light',!!light);
     try{body.classList.toggle('sidebar-collapsed',localStorage.getItem('band_room_sidebar_collapsed')==='1');}catch(e){}
     var menuBtn=byId('menuBtn'), sideClose=byId('sideCloseBtn'), toggle=byId('sidebarToggle');

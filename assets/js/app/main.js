@@ -792,7 +792,7 @@
   sendFullBtn.addEventListener('click',function(){submitGrading('full');});
 
   // Greeting
-  addChatMessage('assistant', 'Chào bạn! Mình là **Giám khảo AI** của Band Room, chấm theo **4 tiêu chí IELTS** (thang **0–9.0**): Fluency & Coherence, Lexical Resource, Grammatical Range & Accuracy, Pronunciation.\n\n**Cách dùng:**\n- Ghi âm câu trả lời ở Studio bên trái (bấm **Nghe câu hỏi** để nghe đọc). Chuyển giọng nói thành văn bản chạy **miễn phí trong trình duyệt** — nhớ soát lại ô văn bản để sửa từ bị nghe nhầm (ví dụ what/was) trước khi gửi.\n- Chọn **Cách nộp bài**: *Chấm từng Part* hoặc *Làm cả 3 Part rồi chấm*.\n- Sau khi chấm, mình sẽ cho **nhận xét tổng quan, điểm từng tiêu chí, sửa lỗi (nhất là ngữ pháp) và gợi ý từ/cụm/câu** hay hơn.\n\nChấm điểm dùng **Gemini trực tiếp**. Khi chưa cấu hình Gemini, bạn vẫn luyện tập và lưu audio; hệ thống không tự tạo điểm IELTS. Đánh giá Pronunciation chỉ đáng tin khi có âm thanh và model hỗ trợ nghe, không thể kết luận chính xác chỉ từ transcript. Bài chấm được **lưu vào lịch sử** theo tài khoản của bạn.');
+  addChatMessage('assistant', 'Ghi âm một câu trả lời, rồi gửi bài để nhận đánh giá theo 4 tiêu chí IELTS. Bạn cũng có thể hỏi thêm ở đây.\n\nKhi chưa kết nối Gemini, bạn vẫn có thể luyện nói và lưu bản ghi trên thiết bị.');
   renderQuickChips();
 
   renderQuestion();
