@@ -11,9 +11,7 @@ const envHandler: Connect.NextHandleFunction = (request, response, next) => {
   if (request.url?.split("?")[0] !== "/api/env.js") return next();
   response.setHeader("Content-Type", "application/javascript");
   response.setHeader("Cache-Control", "no-store");
-  response.end(`window.env = Object.freeze(${JSON.stringify({
-    GEMINI_KEY: process.env.GEMINI_KEY || process.env.GEMINI_API_KEY || "",
-  })});`);
+  response.end('window.env = Object.freeze({});');
 };
 
 function legacyPages(): Plugin {

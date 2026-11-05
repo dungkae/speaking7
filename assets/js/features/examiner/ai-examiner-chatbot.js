@@ -1,17 +1,10 @@
 (function (global) {
   'use strict';
 
-  var status = {configured:false,provider:'offline'};
-  var client;
   var SUGGESTED_PROMPTS = ['Giải thích thêm về Lexical Resource','Làm sao tăng độ trôi chảy?','Cho ví dụ câu ghép/câu phức','Góp ý cách luyện phát âm'];
-  function refreshStatus() {
-    var config=global.env||{};
-    var models=Array.isArray(config.GEMINI_MODELS)?config.GEMINI_MODELS:['gemini-2.5-flash-lite'];
-    status={configured:!!config.GEMINI_KEY,provider:'gemini',model:models[0]};
-    client=global.BandRoomGemini.create({apiKey:config.GEMINI_KEY||'',model:status.model,models:models,timeoutMs:35000});
-    return Promise.resolve(status);
-  }
-  function isOnline(){return status.configured;}
+  function connection(){return global.BandRoomGeminiSettings?.getConnection() || null;}
+  function refreshStatus() { var c=connection(); return Promise.resolve({configured:!!c,provider:c?'gemini':'offline',model:c?.model,capabilities:c?.capabilities}); }
+  function isOnline(){return !!connection();}
   function activeBackend(){return isOnline()?'gemini':'offline';}
   function escapeHtml(text) {
     return String(text == null ? '' : text).replace(/&/g, '&amp;').replace(/</g, '&lt;')
@@ -93,33 +86,27 @@
       return global.btoa(binary);
     });
   }
-  function reviewAnswer(part, question, transcript, audioBlob) {
-    transcript = normalize(transcript);
-    if (!transcript && !(audioBlob && audioBlob.size)) return Promise.reject(new Error('Chưa có nội dung hoặc audio để chấm.'));
-    return global.BandRoomExaminerReady.then(function () {
-      if (!isOnline()) return reviewLocal(part, question, transcript);
-      return blobToBase64(audioBlob).then(function (data) {
-        var body = { part: Number(part), question: String(question || ''), transcript: transcript };
-        if (data) body.audio = { mimeType: (audioBlob.type || 'audio/webm').split(';')[0], data: data };
-        return client.review(body).then(function (review) {
-          if (!review || !review.criteria || typeof review.summary_vi !== 'string') throw new Error('Gemini trả về bài chấm không hợp lệ.');
-          return review;
-        });
-      });
+  function reviewWithConnection(c, part, question, transcript, audioBlob) {
+    transcript=normalize(transcript);
+    if(!transcript && !(audioBlob && audioBlob.size))return Promise.reject(new Error('Chưa có nội dung hoặc audio để chấm.'));
+    if(!c)return Promise.resolve(reviewLocal(part,question,transcript));
+    if(audioBlob?.size && !c.capabilities.audioInputAccepted)return Promise.reject(new Error('Model này chưa xác minh được đầu vào audio. Hãy chọn model khác hoặc chấm transcript.'));
+    return blobToBase64(audioBlob).then(function(data){
+      var body={part:Number(part),question:String(question||''),transcript:transcript};
+      if(data)body.audio={mimeType:(audioBlob.type||'audio/webm').split(';')[0],data:data};
+      return c.client.review(body);
     });
   }
+  function reviewAnswer(part, question, transcript, audioBlob) { return reviewWithConnection(connection(),part,question,transcript,audioBlob); }
   function chat(history) {
-    return global.BandRoomExaminerReady.then(function () {
-      if (!isOnline()) throw new Error('Chưa có khóa Gemini trong env.js.');
-      return client.chat({ history: history || [] }).then(function (data) {
-        if (!data || typeof data.text !== 'string' || !data.text.trim()) throw new Error('Máy chủ không trả về nội dung phản hồi.');
-        return data.text;
-      });
-    });
+    var c=connection();
+    if(!c)return Promise.reject(new Error('Hãy nhập và xác minh API key Gemini trong Cấu hình.'));
+    return c.client.chat({history:history||[]}).then(function(data){if(!data?.text?.trim())throw new Error('Gemini không trả về nội dung.');return data.text;});
   }
 
   function bandLabel(value) { return typeof value === 'number' && isFinite(value) ? value.toFixed(1) : 'chưa đánh giá'; }
   function gradeAnswers(answersByPart, mode, selectedPart) {
+    var capturedConnection = connection();
     var parts = mode === 'full' ? [1, 2, 3] : [Number(selectedPart)];
     var sections = [], partScores = [], complete = true;
     var sequence = Promise.resolve();
@@ -135,7 +122,7 @@
       });
       answers.forEach(function (answer, index) {
         sequence = sequence.then(function () {
-          return reviewAnswer(part, answer.question, answer.text, answer.audioBlob).then(function (review) {
+          return reviewWithConnection(capturedConnection, part, answer.question, answer.text, answer.audioBlob).then(function (review) {
             sections.push('### Câu ' + (index + 1), String(answer.question || ''), review.summary_vi);
             Object.keys(review.criteria).forEach(function (key) {
               var names = { fluency_coherence: 'Fluency and Coherence', lexical_resource: 'Lexical Resource', grammatical_range_accuracy: 'Grammatical Range and Accuracy', pronunciation: 'Pronunciation' };
@@ -172,7 +159,7 @@
     buildGradingMessage: buildGradingMessage, buildGradingMessageFull: buildGradingMessageFull,
     gradeLocal: gradeLocal, gradeLocalFull: gradeLocalFull, replyLocal: replyLocal,
     reviewAnswer: reviewAnswer, reviewLocal: reviewLocal, gradeAnswers: gradeAnswers,
-    testConnection:function(){return refreshStatus().then(function(){if(!isOnline())throw new Error('Chưa có GEMINI_KEY trong env.js.');return client.chat({history:[{role:'user',content:'Reply with OK only.'}]}).then(function(){return client.lastModel();});});},
+    testConnection:function(){var c=connection();if(!c)return Promise.reject(new Error('Hãy xác minh API key Gemini trong Cấu hình.'));return c.client.verify().then(function(){return c.model;});},
     chat: chat, isOnline: isOnline, activeBackend: activeBackend, refreshStatus: refreshStatus
   };
   global.BandRoomExaminerReady = refreshStatus();

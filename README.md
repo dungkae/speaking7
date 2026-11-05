@@ -20,7 +20,7 @@ npm run build
 npm run preview
 ```
 
-`npm test` chạy 7 kiểm tra phát triển hiện có. `tests/scope-audit.cjs` là công cụ so sánh với thư mục dự án gốc, cần đối số riêng và không thuộc bộ kiểm tra khởi động.
+`npm test` chạy 8 bộ kiểm tra phát triển, gồm xác minh Gemini cá nhân, hủy yêu cầu và giữ nguyên client trong một lượt chấm. `tests/scope-audit.cjs` là công cụ so sánh với thư mục dự án gốc, cần đối số riêng và không thuộc bộ kiểm tra khởi động.
 
 Các script JS thuần vẫn chạy theo thứ tự cũ và được chép vào `dist/assets/js` khi build. Bản build nằm trong `dist/`; `npm run preview` phục vụ bản này. Giấy phép font cũng được chép vào bản build.
 
@@ -48,6 +48,21 @@ Không cần chạy lại `shadcn init` trên cấu hình đã có.
 
 ## Gemini
 
-Endpoint `/api/env.js` hiện có vẫn được dùng. Vite dev/preview cung cấp cùng cấu hình từ biến môi trường `GEMINI_KEY` hoặc `GEMINI_API_KEY` của tiến trình, không nhúng khóa vào bundle lúc build. Handler hiện tại trả khóa cho trình duyệt; chỉ cấu hình khóa phù hợp cho bản dùng riêng. Nhập giá trị qua cấu hình môi trường an toàn, không đưa khóa vào Git hay chat. Khi triển khai, cần tiếp tục phục vụ handler `api/env.js`, không dùng một trang HTML thay cho endpoint này.
+Mỗi người dùng nhập API key riêng tại **Gemini của bạn**. Key chỉ được giữ trong bộ nhớ của trang, không lưu vào localStorage và không ghi vào lịch sử. Tải lại trang cần nhập lại key. Nút **Lấy model theo key** lấy danh sách model có hỗ trợ generateContent từ Google; bạn cũng có thể nhập mã model trong Google AI Studio.
+
+Sau khi dán key, bảng giữa màn hình kiểm tra một yêu cầu văn bản và một đoạn WAV im lặng trên đúng model đã chọn. Chỉ khi cả hai phản hồi hợp lệ, kết nối mới được sử dụng cho chấm bài/chat. Đây là kiểm tra quyền truy cập và khả năng nhận audio, không chứng minh độ chính xác của điểm phát âm. Hai yêu cầu kiểm tra có thể dùng quota của bạn. Có thể hủy, đổi model hoặc ngắt kết nối; lỗi/quota/model không hợp lệ không thay thế kết nối đã xác minh trước đó. Một lượt chấm nhiều câu luôn dùng cùng client/model.
+
+`/api/env.js` ở cả handler triển khai lẫn Vite dev/preview chỉ trả cấu hình rỗng tương thích; không cung cấp `GEMINI_KEY` hay `GEMINI_API_KEY` của chủ trang. Không cần cấu hình key dùng chung trên máy chủ. Key cá nhân được gửi trực tiếp tới `generativelanguage.googleapis.com` bằng header `x-goog-api-key`. Khi triển khai cần HTTPS hoặc localhost để hỗ trợ microphone; trình duyệt cần truy cập được dịch vụ Gemini. Không dán key vào chat, commit hay ảnh chụp màn hình.
+
+## Kiểm thử trình duyệt
+
+```bash
+npx playwright install chromium
+npm run test:browser
+```
+
+Máy cloud đã có `/usr/bin/chromium` sẽ dùng trình duyệt đó. Có thể đặt `PLAYWRIGHT_CHROMIUM_EXECUTABLE` tới Chromium khác. Bộ kiểm tra tự build và mở server dev/production tại hai cổng 5198/5199; kiểm tra nhập/paste key, phản hồi hợp lệ/không hợp lệ, model, quota, audio, hủy, bàn phím, giao diện điện thoại và menu cố định. Các phản hồi Gemini trong kiểm thử là **giả lập**; không có key thật trong fixture và các kết quả này không chứng minh một key/model thực tế có quyền hay quota. Chỉ bảng xác minh trong ứng dụng mới dùng key cá nhân của bạn để gọi Google thật.
+
+Nếu chạy trong cloud có allowlist mạng, cần cho phép `generativelanguage.googleapis.com`; lỗi mạng không có nghĩa key sai. Chạy trên máy cá nhân hoặc website triển khai dùng kết nối Internet của trình duyệt đó.
 
 Xem [ghi chú tích hợp](docs/liquid-metal-integration.md) để biết props và các điều chỉnh so với prompt.

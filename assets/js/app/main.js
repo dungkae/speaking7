@@ -161,25 +161,22 @@
     reviewPanel.scrollIntoView({behavior:'smooth',block:'nearest'});
   }
 
-  // Trạng thái cấu hình Gemini cho bản Go Live cá nhân.
+  // Only a verified personal connection can enable the AI status.
   function refreshKeyStatus(){
     var online=AIExaminer.isOnline();
+    var settings=window.BandRoomGeminiSettings;
+    var connection=settings&&settings.getSnapshot?settings.getSnapshot():{};
     if(keyStatus)keyStatus.classList.toggle('on',online);
-    if(keyStatusText)keyStatusText.textContent=online?'Gemini: đã có cấu hình':'Chưa có cấu hình Gemini';
-    if(el('serverSettingsStatus'))el('serverSettingsStatus').textContent=online?'Gemini được gọi trực tiếp từ trình duyệt. Cấu hình đã có khóa; trạng thái này không xác nhận hạn mức API.':'Chưa có khóa. Kiểm tra env.js.';
-    if(modePill)modePill.textContent=online?'Chế độ: Gemini trực tiếp':'Chế độ: luyện tập, chưa chấm AI';
+    if(keyStatusText)keyStatusText.textContent=online?'Gemini: '+(connection.model||'đã xác minh'):'Kết nối Gemini của bạn';
+    if(modePill)modePill.textContent=online?'Chế độ: Gemini cá nhân':'Chế độ: luyện tập, chưa chấm AI';
   }
-  if(el('testGeminiBtn'))el('testGeminiBtn').addEventListener('click',function(){
-    var button=el('testGeminiBtn'),note=el('serverSettingsStatus');button.disabled=true;note.textContent='Đang gọi thử Gemini…';
-    AIExaminer.testConnection().then(function(model){note.textContent='Kết nối thành công. Model: '+model;}).catch(function(error){note.textContent=error.message;}).finally(function(){button.disabled=false;});
-  });
-  function openSettings(){ if(modalOverlay)modalOverlay.classList.add('show');refreshKeyStatus(); }
-  function closeSettings(){ if(modalOverlay)modalOverlay.classList.remove('show'); }
-  if(settingsBtn)settingsBtn.addEventListener('click',openSettings);
-  if(closeModalBtn)closeModalBtn.addEventListener('click',closeSettings);
-  if(modalOverlay)modalOverlay.addEventListener('click',function(e){if(e.target===modalOverlay)closeSettings();});
   refreshKeyStatus();
   Promise.resolve(window.BandRoomExaminerReady).then(refreshKeyStatus);
+  if(window.BandRoomGeminiSettings&&window.BandRoomGeminiSettings.subscribe)window.BandRoomGeminiSettings.subscribe(refreshKeyStatus);
+  if(window.BandRoomSettingsUI){
+    window.BandRoomSettingsUI.configure({isBusy:busy});
+    window.BandRoomSettingsUI.init();
+  }
 
   // ============ ĐĂNG NHẬP + LỊCH SỬ (Firebase) ============
   var appEl = document.querySelector('.app');

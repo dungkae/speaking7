@@ -4,3 +4,7 @@ node_modules/
 dist/
 .env.local
 .env.*.local
+
+.playwright-artifacts/
+playwright-report/
+test-results/

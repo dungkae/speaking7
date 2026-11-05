@@ -79,41 +79,52 @@ function normalizeReview(r, input) {
     feedback_vi:strings('feedback_vi'),pronunciation_notes_vi:input.audio ? strings('pronunciation_notes_vi') : ['Chưa có audio: không chấm Pronunciation. Fluency & Coherence chỉ được ước lượng từ transcript.'],word_feedback,used_audio:!!input.audio};
 }
 function createGemini(config, fetchImpl = fetch) {
+  const apiKey = String(config.apiKey || '').trim();
+  const model = String(config.model || '').replace(/^models\//, '');
+  const timeoutMs = Number(config.timeoutMs) || 35000;
   let lastModel = '';
-  async function generate(contents, instruction, schema) {
-    if (!config.apiKey) throw new ApiError(400, 'Chưa có GEMINI_KEY trong env.js.');
-    const models = [...new Set(config.models || [config.model])].filter(m => /^[a-zA-Z0-9.-]+$/.test(m)).slice(0,3);
-    const body = JSON.stringify({contents,systemInstruction:{parts:[{text:instruction}]},generationConfig:{maxOutputTokens:4096,...(schema ? {responseMimeType:'application/json',responseSchema:schema} : {})}});
-    const failures=[];
-    for (const model of models) {
-      const controller=new AbortController();
-      const timer=setTimeout(()=>controller.abort(),config.timeoutMs||35000);
-      try {
-        const url='https://generativelanguage.googleapis.com/v1beta/models/'+model+':generateContent?key='+encodeURIComponent(config.apiKey);
-        const response=await fetchImpl(url,{method:'POST',headers:{'Content-Type':'application/json'},body,signal:controller.signal});
-        const payload=await response.json().catch(()=>({}));
-        if(!response.ok){
-          const detail=String(payload.error?.message||'').split(config.apiKey).join('[key]').slice(0,250);
-          const message=model+' — HTTP '+response.status+(detail?': '+detail:'');
-          if([400,401,403].includes(response.status))throw new ApiError(response.status,message);
-          failures.push(message);continue;
+  if (!/^[a-zA-Z0-9._-]+$/.test(model)) throw new ApiError(400, 'Tên model Gemini không hợp lệ.');
+  async function request(body, signal) {
+    if (!apiKey) throw new ApiError(400, 'Hãy nhập và xác minh API key Gemini của bạn.');
+    const controller = new AbortController();
+    let timedOut = false;
+    const abort = () => controller.abort();
+    if (signal?.aborted) controller.abort();
+    signal?.addEventListener('abort', abort, {once:true});
+    const timer = setTimeout(() => { timedOut = true; controller.abort(); }, timeoutMs);
+    try {
+      const response = await fetchImpl('https://generativelanguage.googleapis.com/v1beta/models/' + model + ':generateContent', {
+        method:'POST', headers:{'Content-Type':'application/json','x-goog-api-key':apiKey},
+        credentials:'omit', redirect:'error', body:JSON.stringify(body), signal:controller.signal
+      });
+      if (!response.ok) {
+        const failure = await response.json().catch(() => null);
+        const reasons = Array.isArray(failure?.error?.details) ? failure.error.details : [];
+        if (response.status === 401 || reasons.some(detail => ['API_KEY_INVALID','API_KEY_EXPIRED','API_KEY_NOT_FOUND'].includes(detail?.reason))) {
+          throw new ApiError(401, 'API key Gemini không hợp lệ hoặc đã hết hiệu lực.');
         }
-        const candidate=payload.candidates?.[0];
-        const result=(candidate?.content?.parts||[]).filter(p=>!p.thought&&typeof p.text==='string').map(p=>p.text).join('').trim();
-        if(!result||candidate.finishReason&&candidate.finishReason!=='STOP'){
-          failures.push(model+' — phản hồi chưa hoàn chỉnh ('+(candidate?.finishReason||payload.promptFeedback?.blockReason||'trống')+')');continue;
-        }
-        lastModel=model;return result;
-      }catch(error){
-        if(error instanceof ApiError)throw error;
-        if(error.name==='AbortError'){failures.push(model+' — quá thời gian chờ');continue;}
-        throw new ApiError(0,'Không kết nối được Google Gemini. Kiểm tra mạng hoặc Console/Network của trình duyệt.');
-      }finally{clearTimeout(timer);}
-    }
-    throw new ApiError(503,'Không model nào trả về kết quả. '+failures.join(' | '));
+        const messages = {400:'Model không hỗ trợ yêu cầu này hoặc cấu hình chưa hợp lệ.',401:'API key Gemini không hợp lệ.',403:'API key không có quyền dùng model đã chọn.',404:'Không tìm thấy model Gemini đã chọn.',429:'Gemini đã hết hạn mức hoặc đang giới hạn yêu cầu. Hãy kiểm tra quota của bạn.'};
+        throw new ApiError(response.status, messages[response.status] || (response.status >= 500 ? 'Dịch vụ Gemini đang gặp sự cố. Hãy thử lại sau.' : 'Gemini từ chối yêu cầu.'));
+      }
+      const payload = await response.json().catch(() => null);
+      const candidate = payload?.candidates?.[0];
+      const result = (candidate?.content?.parts || []).filter(p => !p.thought && typeof p.text === 'string').map(p => p.text).join('').trim();
+      if (payload?.promptFeedback?.blockReason || candidate?.finishReason !== 'STOP' || !result) throw new ApiError(502, 'Gemini trả về phản hồi trống, bị chặn hoặc chưa hoàn chỉnh.');
+      if (controller.signal.aborted) throw new DOMException('Cancelled','AbortError');
+      lastModel = model;
+      return result;
+    } catch (error) {
+      if (error instanceof ApiError) throw error;
+      if (controller.signal.aborted) { const e = new ApiError(timedOut ? 408 : 499, timedOut ? 'Gemini phản hồi quá chậm. Hãy thử lại.' : 'Đã hủy xác minh.'); e.name = timedOut ? 'TimeoutError' : 'AbortError'; throw e; }
+      throw new ApiError(0, 'Không kết nối được Google Gemini. Hãy kiểm tra mạng và quyền truy cập dịch vụ.');
+    } finally { clearTimeout(timer); signal?.removeEventListener('abort', abort); }
   }
-  return {
+  function generate(contents, instruction, schema) {
+    return request({contents,systemInstruction:{parts:[{text:instruction}]},generationConfig:{maxOutputTokens:4096,...(schema ? {responseMimeType:'application/json',responseSchema:schema} : {})}});
+  }
+  return Object.freeze({
     lastModel:()=>lastModel,
+    verify: (parts, signal) => request({contents:[{role:'user',parts:parts || [{text:'Reply with the single word OK. Do not add punctuation or explanation.'}]}],generationConfig:{temperature:0,maxOutputTokens:512}}, signal),
     async chat(body) { return {text:await generate(validateChat(body),chatInstruction)}; },
     async review(body) {
       const input = validateReview(body);
@@ -124,7 +135,7 @@ function createGemini(config, fetchImpl = fetch) {
       try { r = JSON.parse(raw); } catch { throw new ApiError(502, 'Gemini trả về JSON chấm bài không hợp lệ.'); }
       return normalizeReview(r,input);
     }
-  };
+  });
 }
 
 global.BandRoomGemini = {create:createGemini};

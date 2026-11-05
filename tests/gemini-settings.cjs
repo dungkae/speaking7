@@ -1,0 +1,38 @@
+const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict'),path=require('node:path');
+let handler, calls=[];
+const ok=()=>({ok:true,json:async()=>({candidates:[{finishReason:'STOP',content:{parts:[{text:'OK'}]}}]})});
+const context={setTimeout,clearTimeout,AbortController,DOMException,Uint8Array,DataView,btoa:s=>Buffer.from(s,'binary').toString('base64'),fetch:async(url,options)=>{calls.push({url,options});return handler?handler(url,options):ok();}};
+context.window=context;vm.createContext(context);
+for(const file of ['gemini-client.js','gemini-settings.js','ai-examiner-chatbot.js'])vm.runInContext(fs.readFileSync(path.join(__dirname,'../assets/js/features/examiner',file),'utf8'),context);
+(async()=>{
+ const settings=context.BandRoomGeminiSettings;
+ assert.equal(settings.getConnection(),null);
+ await settings.connect({apiKey:'secret-one',model:'gemini-one'});
+ assert.equal(calls.length,2);assert.equal(settings.getSnapshot().audioInputAccepted,true);
+ const wav=Buffer.from(JSON.parse(calls[1].options.body).contents[0].parts[1].inlineData.data,'base64');assert.equal(wav.subarray(0,4).toString(),'RIFF');assert.equal(wav.readUInt32LE(40),32000);
+ const first=settings.getConnection();
+ let probe=0;handler=async()=>++probe===1?ok():({ok:false,status:400,json:async()=>({error:{}})});
+ await assert.rejects(settings.connect({apiKey:'secret-audio',model:'gemini-noaudio'}),e=>e.code==='AUDIO_UNSUPPORTED');assert.equal(settings.getConnection(),first);
+ handler=async()=>({ok:false,status:400,json:async()=>({error:{}})});
+ await assert.rejects(settings.connect({apiKey:'secret-invalid',model:'gemini-invalid'}),e=>e.code==='INVALID_REQUEST');assert.equal(settings.getConnection(),first);
+ handler=async()=>({ok:false,status:429,json:async()=>({error:{}})});
+ await assert.rejects(settings.connect({apiKey:'secret-two',model:'gemini-two'}),e=>e.code==='QUOTA_EXCEEDED');assert.equal(settings.getConnection(),first);
+ handler=async()=>({ok:true,json:async()=>({candidates:[{finishReason:'MAX_TOKENS',content:{parts:[{text:'unfinished'}]}}]})});
+ await assert.rejects(settings.connect({apiKey:'secret-two',model:'gemini-two'}),e=>e.code==='INVALID_RESPONSE');assert.equal(settings.getConnection(),first);
+ let release;
+ handler=()=>new Promise(resolve=>{release=resolve;});
+ const stale=settings.connect({apiKey:'secret-old',model:'gemini-old'});settings.cancel();handler=null;
+ await settings.connect({apiKey:'secret-new',model:'gemini-new'});release(ok());
+ await assert.rejects(stale,e=>e.code==='ABORTED');assert.equal(settings.getConnection().model,'gemini-new');
+ await context.AIExaminer.refreshStatus();assert.equal(context.AIExaminer.isOnline(),true);
+ // One grading run retains its verified client even when settings switch between answers.
+ const schemaReview={transcript:'I like books.',criteria:{fluency_coherence:6,lexical_resource:6,grammatical_range_accuracy:6,pronunciation:null},corrected_answer:'I like books.',natural_answer:'I enjoy reading.',summary_vi:'Review',feedback_vi:[],pronunciation_notes_vi:[],word_feedback:[]};
+ let grades=0;const gradeKeys=[];
+ handler=async(url,options)=>{if(JSON.parse(options.body).generationConfig.responseSchema){gradeKeys.push(options.headers['x-goog-api-key']);if(++grades===1)await settings.connect({apiKey:'private-replacement-key',model:'gemini-replacement'});return {ok:true,json:async()=>({candidates:[{finishReason:'STOP',content:{parts:[{text:JSON.stringify(schemaReview)}]}}]})};}return ok();};
+ await context.AIExaminer.gradeAnswers({1:[{question:'Q1',text:'I like books.'},{question:'Q2',text:'I like books.'}]},'part',1);
+ assert.deepEqual(gradeKeys,['secret-new','secret-new']);
+ assert(!JSON.stringify(settings.getSnapshot()).includes('private-replacement-key'));assert(!JSON.stringify(settings.getConnection()).includes('private-replacement-key'));
+ settings.disconnect();assert.equal(context.AIExaminer.isOnline(),false);
+ assert(calls.every(c=>!c.url.includes('secret-')));
+ console.log('PASS: verified BYOK, valid WAV, malformed response, quota, stale cancellation, prior config retention, immutable batch client');
+})().catch(e=>{console.error(e);process.exitCode=1});

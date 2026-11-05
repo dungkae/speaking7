@@ -8,7 +8,8 @@
     "build": "npm run typecheck && vite build",
     "preview": "vite preview --host 127.0.0.1",
     "typecheck": "tsc --noEmit",
-    "test": "node tests/audio-regression.cjs && node tests/check-live-server.cjs && node tests/controller-regression.cjs && node tests/direct-gemini.cjs && node tests/question-content.cjs && node tests/smoke-test.cjs && node tests/speech-regression.cjs"
+    "test": "node tests/audio-regression.cjs && node tests/check-live-server.cjs && node tests/controller-regression.cjs && node tests/direct-gemini.cjs && node tests/gemini-settings.cjs && node tests/question-content.cjs && node tests/smoke-test.cjs && node tests/speech-regression.cjs",
+    "test:browser": "npm run build && playwright test"
   },
   "dependencies": {
     "@paper-design/shaders": "^0.0.82",
@@ -19,6 +20,7 @@
     "tailwind-merge": "^3.7.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.64.1",
     "@tailwindcss/vite": "^4.3.4",
     "@types/node": "^26.6.6",
     "@types/react": "^19.3.0",

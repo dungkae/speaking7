@@ -1,0 +1,49 @@
+/* One accessible dialog for personal Gemini connection and verification. */
+#modalOverlay.gemini-settings-overlay{z-index:110;padding:16px;background:rgba(8,10,13,.56);backdrop-filter:blur(3px)}
+body.gemini-dialog-open{overflow:hidden}
+.gemini-settings-card{width:420px;max-width:calc(100vw - 32px);max-height:calc(100dvh - 32px);overflow:auto;padding:24px;border:1px solid #6c7b8d;border-radius:18px;background:#22262d;color:#f2f3f5;box-shadow:0 24px 90px #0005;font-family:var(--font-body,system-ui,sans-serif);color-scheme:dark}
+.gemini-settings-card[hidden],.gemini-settings-card [hidden]{display:none!important}
+.gemini-settings-card[data-state="verifying"],.gemini-settings-card[data-state="success"],.gemini-settings-card[data-state="limited"],.gemini-settings-card[data-state="error"]{width:380px}
+.gemini-settings-card #settingsTitle{color:#f2f3f5;font:500 23px/1.35 var(--font-body,system-ui,sans-serif);letter-spacing:-.025em;margin:0 0 10px}
+.gemini-settings-card #settingsTitle:focus{outline:none}
+.gemini-settings-card #serverSettingsStatus{margin:0 0 22px;color:#bec6d1;font-size:13px;line-height:1.8;overflow-wrap:anywhere}
+.gemini-settings-card p{line-height:1.8}
+.gemini-settings-card a{color:#d6e4f7;text-underline-offset:3px}
+.gemini-form-row{margin:0 0 19px}
+.gemini-form-row label{display:block;color:#f2f3f5;font-size:12px;font-weight:500;margin-bottom:8px}
+.gemini-key-field{display:flex;align-items:center;gap:8px;border:1px solid #6c7b8d;border-radius:10px;background:#17191d;padding-right:6px}
+#geminiSettingsDialog input,#geminiSettingsDialog select{width:100%;min-width:0;min-height:44px;padding:11px 12px;border:1px solid #6c7b8d;border-radius:10px;background:#17191d;color:#f2f3f5;font:400 13px var(--font-body,system-ui,sans-serif)}
+#geminiSettingsDialog .gemini-key-field input{flex:1 1 auto;border:0;background:none}
+.gemini-settings-card input::placeholder{color:#a5b0be;opacity:1}
+.gemini-key-field #toggleGeminiKey{flex:0 0 auto;min-width:45px;min-height:34px;padding:7px 8px;border:0;border-radius:7px;background:#2b313a;color:#e4eaf2;font:500 11px var(--font-body,system-ui,sans-serif);cursor:pointer}
+.gemini-settings-card .gemini-help{margin:9px 0 0;color:#a5b0be;font-size:11px;line-height:1.8}
+.gemini-settings-card #geminiActiveConnection{margin:0 0 18px;padding:11px 12px;border:1px solid #46515f;border-radius:10px;background:#2b313a;color:#bec6d1;font-size:11px;line-height:1.8;overflow-wrap:anywhere}
+.gemini-settings-card #geminiFormError{margin:0 0 15px;padding:10px 12px;border-left:2px solid #e8ad92;color:#f1c6b1;background:#e8ad920b;font-size:12px;line-height:1.8;border-radius:0 8px 8px 0}
+.gemini-control{min-height:40px;padding:10px 13px;border:1px solid #6c7b8d;border-radius:9px;background:#2b313a;color:#f2f3f5;font:500 12px var(--font-body,system-ui,sans-serif);cursor:pointer;transition:background .18s,border-color .18s}
+.gemini-control:hover{background:#36404c;border-color:#93a1b4}
+.gemini-control:disabled{opacity:.5;cursor:not-allowed}
+.gemini-primary-action{color:#1c222b;background:#d8e1ed;border-color:#d8e1ed}
+.gemini-primary-action:hover{color:#121821;background:#edf3fb;border-color:#edf3fb}
+.gemini-settings-card #testGeminiBtn{width:100%}
+.gemini-model-tools{display:flex;align-items:center;gap:10px;margin-top:9px}
+.gemini-model-tools .gemini-control{min-height:34px;font-size:10px;padding:7px 9px}
+.gemini-model-tools span{color:#bec6d1;font-size:10px;line-height:1.6}
+.gemini-dialog-footer{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:20px;padding-top:17px;border-top:1px solid #46515f}
+.gemini-dialog-footer #closeModalBtn{margin-left:auto}
+.gemini-settings-card #disconnectGeminiBtn{border:0;padding:8px 0;background:none;color:#bec6d1;font-size:11px;text-align:left}
+.gemini-verification-panel{text-align:center;padding:3px 0 0}
+.gemini-status-icon{width:64px;height:64px;display:grid;place-items:center;margin:2px auto 18px;border:1px solid #546171;border-radius:20px;background:#2b313a;color:#d8e1ed}
+.gemini-status-icon svg{width:29px;height:29px}
+.gemini-spinner{width:29px;height:29px;display:block;border:2px solid #566274;border-top-color:#e6edf7;border-right-color:#c3d4ea;border-radius:50%;animation:gemini-verify-spin .9s linear infinite}
+@keyframes gemini-verify-spin{to{transform:rotate(360deg)}}
+.gemini-settings-card #geminiVerificationDetails{margin:0 0 18px;color:#bec6d1;font-size:12px;line-height:1.85;overflow-wrap:anywhere}
+.gemini-settings-card[data-state="verifying"] #settingsTitle,.gemini-settings-card[data-state="success"] #settingsTitle,.gemini-settings-card[data-state="limited"] #settingsTitle,.gemini-settings-card[data-state="error"] #settingsTitle{text-align:center}
+.gemini-settings-card[data-state="verifying"] #serverSettingsStatus,.gemini-settings-card[data-state="success"] #serverSettingsStatus,.gemini-settings-card[data-state="limited"] #serverSettingsStatus,.gemini-settings-card[data-state="error"] #serverSettingsStatus{text-align:center;margin-bottom:18px}
+.gemini-settings-card[data-state="success"] .gemini-status-icon{color:#b4d7c3;border-color:#709483}
+.gemini-settings-card[data-state="error"] .gemini-status-icon,.gemini-settings-card[data-state="limited"] .gemini-status-icon{color:#e6bea5;border-color:#967e6b}
+.gemini-settings-card :is(button,a,input,select):focus-visible{outline:2px solid #c7d1e0;outline-offset:4px}
+@media(max-width:480px){.gemini-settings-card{padding:21px 18px}.gemini-settings-card #settingsTitle{font-size:21px}#geminiSettingsDialog input,#geminiSettingsDialog select{font-size:16px}}
+@media(prefers-reduced-motion:reduce){.gemini-settings-card *{animation:none!important;transition:none!important}}
+
+.gemini-key-field:focus-within{outline:2px solid #c7d1e0;outline-offset:3px}
+#geminiSettingsDialog .gemini-key-field input:focus,#geminiSettingsDialog .gemini-key-field input:focus-visible{outline:none;border:0}

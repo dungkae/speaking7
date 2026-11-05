@@ -10,7 +10,8 @@
 <link rel="stylesheet" href="assets/css/sidebar.css">
 <link rel="stylesheet" href="assets/css/responsive.css">
 <link rel="stylesheet" href="assets/css/enhancements.css?v=2">
-<link rel="stylesheet" href="assets/css/studio-polish.css?v=5">
+<link rel="stylesheet" href="assets/css/studio-polish.css?v=6">
+<link rel="stylesheet" href="assets/css/gemini-settings.css?v=1">
 <script src="assets/js/app/boot-guard.js"></script>
 </head>
 <body>
@@ -35,7 +36,7 @@
   <div class="app-layout">
     <aside class="side-menu" id="sideMenu" aria-label="Menu luyện thi">
       <div class="side-brand">
-        <span class="side-brand-mark" aria-hidden="true">br.</span>
+        <span class="side-brand-mark" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="11" y="3" width="10" height="18" rx="5"/><path d="M7 15v2a9 9 0 0 0 18 0v-2M16 26v4m-5 0h10"/></svg></span>
         <div><strong>BAND ROOM</strong><small>Phòng luyện nói</small></div>
         <button class="sidebar-toggle" id="sidebarToggle" type="button" aria-label="Thu gọn hoặc mở rộng menu" aria-controls="sideMenu" aria-expanded="true" title="Thu gọn menu">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
@@ -76,7 +77,7 @@
       <div class="side-spacer"></div>
       <div class="side-footer">
         <button class="side-utility" id="sideThemeBtn" type="button"><svg class="side-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9c0-.5 0-1-.1-1.4A7 7 0 0 1 13.4 3.1C13 3 12.5 3 12 3Z"/></svg><span>Đổi sáng / tối</span></button>
-        <button class="side-utility" id="sideSettingsBtn" type="button"><svg class="side-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-2.8 2.8-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6v.1h-4V21a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1L4.2 17l.1-.1a1.7 1.7 0 0 0 .3-1.9A1.7 1.7 0 0 0 3 14H3v-4h.1a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9L4.2 7 7 4.2l.1.1a1.7 1.7 0 0 0 1.9.3 1.7 1.7 0 0 0 1-1.6V3h4v.1a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1L19.8 7l-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.6 1h.1v4H21a1.7 1.7 0 0 0-1.6 1Z"/></svg><span>Cài đặt API</span></button>
+        <button class="side-utility" id="sideSettingsBtn" type="button"><svg class="side-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-2.8 2.8-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6v.1h-4V21a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1L4.2 17l.1-.1a1.7 1.7 0 0 0 .3-1.9A1.7 1.7 0 0 0 3 14H3v-4h.1a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9L4.2 7 7 4.2l.1.1a1.7 1.7 0 0 0 1.9.3 1.7 1.7 0 0 0 1-1.6V3h4v.1a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1L19.8 7l-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.6 1h.1v4H21a1.7 1.7 0 0 0-1.6 1Z"/></svg><span>Gemini của bạn</span></button>
       </div>
     </aside>
     <div class="drawer-scrim" id="drawerScrim"></div>
@@ -92,7 +93,7 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
       </button>
       <button class="theme-btn" id="themeBtn" title="Đổi giao diện sáng/tối">◐</button>
-      <button class="settings-btn" id="settingsBtn" title="Cài đặt API key">
+      <button class="settings-btn" id="settingsBtn" title="Kết nối Gemini của bạn">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
       </button>
       <a class="account-login" href="login.html" aria-label="Đăng nhập tài khoản"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 21v-2a7 7 0 0 1 14 0v2"/></svg><span>Đăng nhập</span></a>
@@ -209,14 +210,51 @@
 </div>
 
 
-<div class="modal-overlay" id="modalOverlay">
-  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
-    <h3 id="settingsTitle">Kết nối Gemini</h3>
-    <p id="serverSettingsStatus">Đang đọc cấu hình Gemini…</p>
-    <p>Mở index.html bằng Go Live trong VS Code. Khóa Gemini đã có trong cấu hình của bản dùng riêng này.</p>
-    <div class="modal-actions"><button class="btn btn-primary" id="testGeminiBtn" type="button">Kiểm tra Gemini</button><button class="btn btn-ghost" id="closeModalBtn" type="button">Đóng</button></div>
+<div class="modal-overlay gemini-settings-overlay" id="modalOverlay">
+  <div class="modal gemini-settings-card" id="geminiSettingsDialog" data-state="editing" role="dialog" aria-modal="true" aria-labelledby="settingsTitle" aria-describedby="serverSettingsStatus">
+    <h3 id="settingsTitle" tabindex="-1">Kết nối Gemini của bạn</h3>
+    <p id="serverSettingsStatus" role="status" aria-live="polite" aria-atomic="true">Dán API key, chọn model và xác minh trước khi chấm bài.</p>
+    <form id="geminiSettingsForm" novalidate>
+      <p id="geminiActiveConnection"></p>
+      <div class="gemini-form-row">
+        <label for="geminiApiKey">Gemini API key của bạn</label>
+        <div class="gemini-key-field">
+          <input id="geminiApiKey" name="gemini-api-key" type="password" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="Dán API key từ Google AI Studio" aria-describedby="geminiKeyHelp">
+          <button id="toggleGeminiKey" type="button" aria-label="Hiện hoặc ẩn API key" aria-pressed="false">Hiện</button>
+        </div>
+        <p class="gemini-help" id="geminiKeyHelp">Key chỉ được giữ trong bộ nhớ của trang và gửi đến Google Gemini. <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener noreferrer">Tạo API key của bạn ↗</a></p>
+      </div>
+      <div class="gemini-form-row">
+        <label for="geminiModel">Model để chấm bài</label>
+        <select id="geminiModel" aria-describedby="geminiModelHelp">
+          <option value="gemini-2.5-flash">Gemini 2.5 Flash</option>
+          <option value="gemini-2.5-flash-lite">Gemini 2.5 Flash Lite</option>
+          <option value="gemini-2.5-pro">Gemini 2.5 Pro</option>
+          <option value="custom">Nhập model khác…</option>
+        </select>
+        <div class="gemini-model-tools"><button id="loadGeminiModelsBtn" class="gemini-control" type="button">Lấy model theo key</button><span id="geminiModelListStatus" role="status" aria-live="polite"></span></div>
+        <p class="gemini-help" id="geminiModelHelp">Các lựa chọn có sẵn là gợi ý. Lấy danh sách từ Google hoặc nhập model trong AI Studio của bạn; model sẽ được kiểm tra bằng yêu cầu thật.</p>
+      </div>
+      <div class="gemini-form-row" id="geminiCustomModelRow" hidden>
+        <label for="geminiCustomModel">Mã model</label>
+        <input id="geminiCustomModel" type="text" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="Ví dụ: gemini-2.5-flash">
+      </div>
+      <p id="geminiFormError" role="alert" hidden></p>
+      <button id="testGeminiBtn" class="gemini-control gemini-primary-action" type="submit">Xác minh &amp; sử dụng</button>
+      <p class="gemini-help">Sau khi dán key, trang sẽ tự kiểm tra model đang chọn. Hai yêu cầu thử có thể dùng một phần nhỏ hạn mức API của bạn.</p>
+    </form>
+    <section id="geminiVerificationPanel" class="gemini-verification-panel" hidden aria-label="Kết quả xác minh Gemini">
+      <div class="gemini-status-icon" id="geminiStatusIcon" aria-hidden="true"></div>
+      <p id="geminiVerificationDetails"></p>
+      <button id="editGeminiBtn" class="gemini-control" type="button" hidden>Sửa key hoặc model</button>
+    </section>
+    <div class="gemini-dialog-footer">
+      <button id="disconnectGeminiBtn" class="gemini-control" type="button" hidden>Ngắt kết nối</button>
+      <button id="closeModalBtn" class="gemini-control" type="button">Đóng</button>
+    </div>
   </div>
 </div>
+
 
 
 
@@ -234,12 +272,14 @@
 <script src="assets/js/data/question-hints.js?v=6"></script>
 <script src="assets/js/data/question-ideas.js"></script>
 <script src="assets/js/features/speaking/speech-to-text.js"></script>
-<script src="assets/js/features/examiner/gemini-client.js?v=4"></script>
-<script src="assets/js/features/examiner/ai-examiner-chatbot.js?v=4"></script>
+<script src="assets/js/features/examiner/gemini-client.js?v=5"></script>
+<script src="assets/js/features/examiner/gemini-settings.js?v=1"></script>
+<script src="assets/js/features/examiner/ai-examiner-chatbot.js?v=5"></script>
 <script src="assets/js/features/history/audio-library.js"></script>
 <script src="assets/js/features/questions/question-assist.js?v=6"></script>
 <script src="assets/js/app/navigation.js"></script>
-<script src="assets/js/app/main.js?v=5"></script>
+<script src="assets/js/features/examiner/settings-ui.js?v=1"></script>
+<script src="assets/js/app/main.js?v=6"></script>
 <script type="module" src="/src/liquid-metal-entry.tsx"></script>
 </body>
 </html>
