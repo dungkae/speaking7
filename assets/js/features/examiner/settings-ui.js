@@ -41,12 +41,14 @@
     if(/TIMEOUT/.test(code))return'Gemini chưa phản hồi trong thời gian chờ. Bạn có thể thử lại.';
     if(/NETWORK|FETCH|CONNECT/.test(code))return'Chưa kết nối được Google Gemini. Hãy kiểm tra mạng rồi thử lại.';
     if(/RESPONSE|OUTPUT/.test(code))return'Gemini chưa trả về phản hồi kiểm tra hợp lệ. Kết nối chưa được kích hoạt.';
-    return'Chưa xác minh được key và model. Hãy kiểm tra cấu hình hoặc thử lại.';
+    if(code==='SERVICE_ERROR')return'Dịch vụ Gemini đang lỗi hoặc quá tải. Hãy thử lại sau; lỗi này chưa chứng minh API key của bạn sai.';
+    return'Ứng dụng chưa hoàn tất xác minh. Hãy xem mã lỗi bên dưới để kiểm tra nguyên nhân.';
   }
-  function showResult(kind,text,model){
+  function showResult(kind,text,model,error){
     card.dataset.state=kind;form.hidden=true;panel.hidden=false;
     title.textContent=kind==='success'?'Đã kết nối Gemini':kind==='limited'?'Chưa sẵn sàng chấm âm thanh':'Chưa thể kết nối';status.textContent=text;
     var s=snapshot();details.textContent=kind==='success'?'Model: '+model+'. Đã kiểm tra phản hồi văn bản và đầu vào âm thanh; kết quả kiểm tra không phải điểm phát âm.':s.connected?'Kết nối đang dùng '+s.model+' vẫn được giữ.':'Chưa có kết nối được kích hoạt. Key của chủ trang không được dùng thay thế.';
+    if(error){var http=Number(error.status);details.textContent+=' Mã lỗi: '+String(error.code||'UNKNOWN').replace(/[^A-Z0-9_]/g,'')+(http>0?' · HTTP '+http:'')+(error.verificationStage==='audio'?' · bước kiểm tra âm thanh.':' · bước kiểm tra văn bản.');}
     statusIcon(kind);editButton.hidden=kind==='success';editButton.textContent='Sửa key hoặc model';closeButton.textContent=kind==='success'?'Tiếp tục luyện nói':'Đóng';closeButton.classList.toggle('gemini-primary-action',kind==='success');disconnectButton.hidden=true;title.focus();
   }
   async function verify(){
@@ -64,7 +66,7 @@
       if(!opened()||current!==attempt||signal.aborted)return;controller=null;
       if(!result||!result.connected||!result.capabilities||!result.capabilities.audioInputAccepted){showResult('limited','Model chưa vượt qua kiểm tra đầu vào âm thanh. Kết nối chưa sẵn sàng cho bài luyện nói.',candidate.model);return;}
       clearDraft();updateActive();showResult('success','Key và model đã phản hồi hợp lệ. Bạn có thể dùng kết nối này để chấm bài.',result.model||candidate.model);
-    }catch(error){if(!opened()||current!==attempt||signal.aborted)return;controller=null;showResult(/AUDIO/i.test(String(error&&error.code||''))?'limited':'error',failureText(error),candidate.model);}
+    }catch(error){if(!opened()||current!==attempt||signal.aborted)return;controller=null;showResult(/AUDIO/i.test(String(error&&error.code||''))?'limited':'error',failureText(error),candidate.model,error);}
   }
   async function loadModels(){
     stopAttempt();message('');

@@ -49,8 +49,8 @@
       active=Object.freeze({client:client,model:model,capabilities:Object.freeze({text:true,audioInputAccepted:audioAccepted}),revision:token});
       pending=null;stage=audioAccepted?'success':'limited';return emit();
     } catch(e) {
-      var safe=normalizeError(e);
-      if(pending?.token===token){pending=null;stage=safe.code==='ABORTED'?(active?'success':'editing'):'error';error=safe.code==='ABORTED'?null:{code:safe.code,message:safe.message};emit();}
+      var safe=normalizeError(e);safe.verificationStage=stage;
+      if(pending?.token===token){pending=null;stage=safe.code==='ABORTED'?(active?'success':'editing'):'error';error=safe.code==='ABORTED'?null:{code:safe.code,message:safe.message,status:safe.status||0,verificationStage:safe.verificationStage};emit();}
       throw safe;
     } finally {signal?.removeEventListener('abort',abort);}
   }

@@ -46,7 +46,7 @@ for(const scenario of [
  {name:'quota',status:429,body:{error:{message:fixtureKey}},text:'hết hạn mức'},
  {name:'permission',status:403,body:{error:{message:fixtureKey}},text:'chưa có quyền'},
  {name:'model',status:404,body:{error:{message:fixtureKey}},text:'Không tìm thấy model'},
- {name:'service error',status:503,body:{error:{message:fixtureKey}},text:'Chưa xác minh'},
+ {name:'service error',status:503,body:{error:{message:fixtureKey}},text:'Dịch vụ Gemini đang lỗi'},
  {name:'malformed success',status:200,body:{},text:'phản hồi kiểm tra hợp lệ'},
 ]){
  test(`rejects ${scenario.name} without claiming connected or reflecting key`,async({page})=>{
