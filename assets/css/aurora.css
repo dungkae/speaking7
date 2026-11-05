@@ -1,0 +1,52 @@
+@keyframes aurora {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg) scale(1); }
+  33% { transform: translate3d(31%, 27%, 0) rotate(12deg) scale(1.16); }
+  66% { transform: translate3d(-23%, -12%, 0) rotate(-8deg) scale(0.96); }
+}
+
+/* A separate layer keeps the sidebar, controls and modals interactive. */
+.aurora-page { isolation: isolate; }
+.aurora-backdrop {
+  --aurora-silver: #626262;
+  --aurora-smoke: #515151;
+  --aurora-ash: #414141;
+  --aurora-visibility: 1;
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: var(--aurora-visibility);
+}
+.light .aurora-backdrop { --aurora-visibility: .32; }
+
+/* Live Server renders these lights before any React module is available. */
+.aurora-static-light {
+  position: absolute;
+  width: 75%;
+  height: 75%;
+  border-radius: 50%;
+  opacity: .27;
+  animation: aurora var(--drift-duration) var(--drift-delay) ease-in-out infinite;
+}
+.aurora-static-light:nth-child(1) {
+  left: -9%; top: -14%;
+  background: radial-gradient(closest-side, var(--aurora-silver), transparent);
+  --drift-duration: 9s;
+  --drift-delay: 0s;
+}
+.aurora-static-light:nth-child(2) {
+  left: 37%; top: -7%;
+  background: radial-gradient(closest-side, var(--aurora-smoke), transparent);
+  --drift-duration: 12.15s;
+  --drift-delay: -2.7s;
+}
+.aurora-static-light:nth-child(3) {
+  left: 15%; top: 32%;
+  background: radial-gradient(closest-side, var(--aurora-ash), transparent);
+  --drift-duration: 15.3s;
+  --drift-delay: -5.85s;
+}
+@media (prefers-reduced-motion: reduce) {
+  .aurora-static-light { animation: none; }
+}

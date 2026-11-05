@@ -1,0 +1,66 @@
+/* Tailwind utilities only: no Preflight reset of the existing HTML application. */
+@layer theme, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
+@import "tw-animate-css";
+@import "../../assets/css/aurora.css";
+@source "../../components";
+@source "../";
+
+/* shadcn color/radius utilities reuse Speaking7's theme instead of resetting it. */
+@theme inline {
+  --animate-aurora: aurora 20s ease-in-out infinite;
+  --color-background: var(--bg, #090a0c);
+  --color-foreground: var(--text, #eeeeef);
+  --color-card: var(--surface, #121416);
+  --color-card-foreground: var(--text, #eeeeef);
+  --color-popover: var(--surface, #121416);
+  --color-popover-foreground: var(--text, #eeeeef);
+  --color-primary: var(--text, #eeeeef);
+  --color-primary-foreground: var(--bg, #090a0c);
+  --color-secondary: var(--surface-hi, #181b20);
+  --color-secondary-foreground: var(--text, #eeeeef);
+  --color-muted: var(--surface-hi, #181b20);
+  --color-muted-foreground: var(--text-dim, #b1b5bd);
+  --color-accent: var(--surface-hi2, #23272e);
+  --color-accent-foreground: var(--text, #eeeeef);
+  --color-destructive: var(--red, #f17c73);
+  --color-border: var(--border, #2a2e35);
+  --color-input: var(--border, #2a2e35);
+  --color-ring: var(--studio-accent, #c7d1e0);
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 10px;
+  --radius-xl: 14px;
+}
+
+.lm-button { display:inline-block; vertical-align:middle; padding:0; margin:0; background:transparent; border:0; border-radius:100px; cursor:pointer; font:inherit; }
+.lm-button:disabled { cursor:not-allowed; opacity:.45; }
+.lm-button:focus-visible,.liquid-metal-host:focus-visible { outline:2px solid #b6c9e4; outline-offset:5px; }
+.lm-stage { position:relative; display:inline-block; vertical-align:middle; isolation:isolate; perspective:1000px; transform-style:preserve-3d; transition:transform .4s cubic-bezier(.34,1.56,.64,1); }
+.lm-shape { position:absolute; inset:0; display:block; border-radius:100px; pointer-events:none; }
+.lm-metal { z-index:0; overflow:hidden; background:conic-gradient(from 45deg,#b9bdc5,#272930,#fff,#626773,#e6eaf2,#3c4149,#b9bdc5); box-shadow:0 2px 5px #0005,0 9px 9px #0002,0 20px 12px #0001; }
+.lm-shader,.lm-shader canvas { position:absolute!important; inset:0; width:100%!important; height:100%!important; display:block; border-radius:100px; }
+.lm-shader[data-renderer="fallback"] canvas { display:none!important; }
+.lm-inset { inset:2px; z-index:1; background:linear-gradient(180deg,#202020,#000); transition:box-shadow .15s,transform .15s; }
+.lm-label { position:absolute; inset:0; z-index:2; pointer-events:none; color:#babcc2; font-size:14px; font-weight:400; white-space:nowrap; text-shadow:0 1px 2px #0008; transition:color .2s,transform .15s; }
+.lm-stage[data-hovered="true"] .lm-label { color:#f4f4f6; }
+.lm-stage[data-hovered="true"] .lm-metal { box-shadow:0 1px 2px #0005,0 4px 4px #0003,0 8px 5px #0002; }
+.lm-stage[data-pressed="true"] { transform:translateY(1px) scale(.98); }
+.lm-stage[data-pressed="true"] .lm-inset { box-shadow:inset 0 2px 4px #0006,inset 0 1px 2px #0005; }
+.lm-ripples { display:block; position:absolute; inset:0; z-index:3; overflow:hidden; border-radius:100px; pointer-events:none; }
+.lm-ripple { position:absolute; display:block; width:20px; height:20px; border-radius:50%; background:radial-gradient(circle,#fff6,transparent 70%); animation:liquid-metal-ripple .6s ease-out both; }
+@keyframes liquid-metal-ripple { from { transform:translate(-50%,-50%) scale(0); opacity:.6; } to { transform:translate(-50%,-50%) scale(4); opacity:0; } }
+/* Native buttons remain in charge of click, focus and disabled state. */
+.btn.liquid-metal-host { min-height:46px; height:46px; padding:0; border:0; border-radius:100px; background:transparent!important; box-shadow:none; transform:none; }
+.send-row:has(.liquid-metal-host) { justify-content:flex-start; }
+.send-row .btn.liquid-metal-host { flex:0 0 auto; width:200px; max-width:100%; }
+.btn.liquid-metal-host .lm-stage { display:block; }
+.btn.liquid-metal-host .lm-label { font-size:12px; }
+.btn.liquid-metal-host:not(:disabled):hover { background:transparent; filter:none; transform:none; }
+.ui-demo { box-sizing:border-box; margin:0; color:#eaeaf0; background:#090a0c; font-family:system-ui,sans-serif; }
+.ui-demo h1 { font-size:30px; font-weight:500; margin:0; }
+.ui-demo p { color:#aeb0ba; margin:0; }
+.ui-demo a { color:#c7cede; text-underline-offset:4px; }
+.demo-toggle { padding:9px 12px; border:1px solid #444852; border-radius:8px; color:#dedee4; background:transparent; cursor:pointer; }
+@media(prefers-reduced-motion:reduce) { .lm-stage,.lm-stage * { transition:none!important; animation:none!important; } }

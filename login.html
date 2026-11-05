@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Đăng nhập — BAND ROOM</title>
+<link rel="stylesheet" href="assets/css/fonts.css">
+<link rel="stylesheet" href="assets/css/auth-studio.css">
+</head>
+<body class="auth-page">
+  <aside class="auth-story">
+    <a class="auth-wordmark" href="index.html">band room<span>.</span></a>
+    <div class="auth-story-copy"><span class="eyebrow">A LITTLE PRACTICE, DAILY.</span><h2>Giọng nói của bạn.<br><em>Câu chuyện của bạn.</em></h2><p>Không cần hoàn hảo để bắt đầu.<br>Chỉ cần một chút can đảm, mỗi ngày.</p></div>
+    <div class="auth-story-footer"><span>IELTS SPEAKING STUDIO</span><span>01 / 03</span></div>
+  </aside>
+  <main class="auth-form-area">
+  <a class="auth-back" href="index.html">← Về phòng luyện nói</a>
+  <div class="card">
+    <div class="brand"><span class="dot"></span>KHÔNG GIAN CỦA BẠN</div>
+    <h1>Mừng bạn trở lại.</h1>
+    <p class="sub">Đăng nhập để lưu và xem lại lịch sử chấm bài IELTS Speaking của bạn.</p>
+    <div class="msg" id="msg"></div>
+    <form id="form" novalidate>
+      <label for="email">Email</label>
+      <input type="email" id="email" autocomplete="username" placeholder="ban@email.com">
+      <label for="pw">Mật khẩu</label>
+      <input type="password" id="pw" autocomplete="current-password" placeholder="••••••">
+      <button class="btn" id="submitBtn" type="submit">Đăng nhập</button>
+    </form>
+    <div class="foot">Chưa có tài khoản? <a href="signup.html">Đăng ký</a></div>
+    <div class="foot"><a href="preview.html">Dùng thử Speaking không cần đăng nhập →</a></div>
+    <div class="mode-note" id="modeNote"></div>
+  </div>
+
+  </main>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="assets/js/features/auth/firebase-config.js"></script>
+  <script src="assets/js/features/auth/auth.js"></script>
+  <script>
+  (function(){
+    "use strict";
+    var msg = document.getElementById('msg');
+    var form = document.getElementById('form');
+    var emailEl = document.getElementById('email');
+    var pwEl = document.getElementById('pw');
+    var btn = document.getElementById('submitBtn');
+    var modeNote = document.getElementById('modeNote');
+
+    if (BRAuth.mode !== 'firebase') {
+      modeNote.textContent = 'Không kết nối được Firebase. Bạn có thể luyện tập không đăng nhập.';
+    } else {
+      modeNote.textContent = 'Bảo mật bằng Firebase Authentication.';
+    }
+
+    if (/[?&]registered=1/.test(location.search)) {
+      msg.textContent = 'Đăng ký thành công! Vui lòng đăng nhập.';
+      msg.className = 'msg ok';
+    }
+
+
+    BRAuth.ready(function(user){ if (user) location.replace('account.html'); });
+
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      msg.textContent = ''; msg.className = 'msg';
+      btn.disabled = true; btn.textContent = 'Đang đăng nhập…';
+      BRAuth.signIn(emailEl.value, pwEl.value).then(function(){
+        location.replace('account.html');
+      }).catch(function(err){
+        msg.textContent = err && err.message ? err.message : 'Không đăng nhập được.';
+        msg.className = 'msg err';
+        btn.disabled = false; btn.textContent = 'Đăng nhập';
+      });
+    });
+  })();
+  </script>
+</body>
+</html>

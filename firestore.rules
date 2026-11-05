@@ -1,0 +1,13 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{uid}/gradings/{gradingId} {
+      allow read, delete: if request.auth != null && request.auth.uid == uid;
+      allow create: if request.auth != null && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['mode', 'part', 'topic', 'overall', 'backend', 'report', 'createdAt', 'createdAtServer'])
+        && request.resource.data.report is string
+        && request.resource.data.report.size() <= 50000;
+      allow update: if false;
+    }
+  }
+}

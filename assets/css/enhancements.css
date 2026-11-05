@@ -1,0 +1,94 @@
+/* Lớp phong cách — cập nhật thiết kế tại đây, không đụng base.css. */
+:root{
+  --font-display:'Playwrite VN','Georgia',cursive;
+  --font-body:'Nunito','DM Sans',system-ui,sans-serif;
+  --font-mono:'DM Sans',ui-monospace,monospace;
+  --sidebar-expanded:218px;
+  --sidebar-mini:67px;
+}
+body{font-family:var(--font-body);}
+.hero h1,.side-brand strong,.mobile-title strong{font-family:var(--font-display);font-optical-sizing:auto;letter-spacing:-.02em;}
+.hero h1{font-weight:400;font-size:clamp(23px,2.35vw,30px);line-height:1.6;}
+.question-card .q-text{font-family:'Nunito',sans-serif;font-weight:700;letter-spacing:-.01em;}
+.side-brand strong{font-size:14px;font-weight:400;letter-spacing:-.03em;}
+.brand{font-family:var(--font-display);font-size:16px;font-weight:400;letter-spacing:-.02em;}
+.side-brand-mark{font-family:var(--font-display);font-size:17px;border-radius:11px;}
+.sidebar-toggle{margin-left:auto;width:30px;height:30px;min-width:30px;display:grid;place-items:center;border:1px solid var(--border);background:var(--surface-hi);color:var(--text-dim);border-radius:10px;cursor:pointer;transition:transform .32s cubic-bezier(.2,.8,.2,1),background .2s,color .2s;}
+.sidebar-toggle:hover{background:var(--surface-hi2);color:var(--text);}
+.sidebar-toggle svg{width:17px;height:17px;transform:rotate(180deg);transition:transform .35s cubic-bezier(.2,.8,.2,1);}
+.topic-choice{display:flex;gap:6px;padding:0 5px;min-width:0;}
+.topic-choice select{min-width:0;width:100%;background:var(--surface-hi);border:1px solid var(--border);border-radius:9px;color:var(--text);padding:8px 7px;font-family:var(--font-body);font-size:11.4px;outline-offset:3px;}
+.topic-choice select:focus-visible{outline:2px solid var(--gold);}
+.topic-choice option{background:var(--surface);color:var(--text);}
+.topic-choice button{min-width:32px;border:1px solid var(--border);background:var(--surface-hi);color:var(--text);border-radius:9px;cursor:pointer;transition:transform .35s ease,background .2s;}
+.topic-choice button:hover{background:var(--surface-hi2);transform:rotate(90deg);}
+.app-layout{transition:grid-template-columns .45s cubic-bezier(.22,1,.36,1),gap .45s cubic-bezier(.22,1,.36,1);}
+@media(min-width:1081px){
+ body.sidebar-collapsed .app-layout{grid-template-columns:var(--sidebar-mini) minmax(0,1fr);gap:14px;}
+ .side-menu{transition:padding .4s cubic-bezier(.22,1,.36,1),border-radius .35s,box-shadow .35s;}
+ body.sidebar-collapsed .side-menu{padding-left:8px;padding-right:8px;}
+ body.sidebar-collapsed .side-brand{display:flex;flex-direction:column;align-items:center;gap:5px;padding:8px 0;}
+ body.sidebar-collapsed .side-brand > div,
+ body.sidebar-collapsed .side-section,
+ body.sidebar-collapsed .side-link > span:last-child,
+ body.sidebar-collapsed .side-utility > span:last-child,
+ body.sidebar-collapsed .side-spacer{visibility:hidden;opacity:0;max-height:0;margin:0;padding:0;border:0;pointer-events:none;overflow:hidden;}
+ body.sidebar-collapsed .side-brand-mark{flex:none;width:33px;height:33px;}
+ body.sidebar-collapsed .sidebar-toggle{margin:0;transform:rotate(180deg);}
+ body.sidebar-collapsed .sidebar-toggle svg{transform:rotate(180deg);}
+ body.sidebar-collapsed .side-links{visibility:visible;opacity:1;max-height:none;overflow:visible;pointer-events:auto;}
+ body.sidebar-collapsed .side-links .side-label{display:none;}
+ body.sidebar-collapsed .side-link,
+ body.sidebar-collapsed .side-utility{justify-content:center;width:43px;margin:0 auto;padding:10px;}
+ body.sidebar-collapsed .side-footer{display:flex;flex-direction:column;align-items:center;gap:5px;}
+ body.sidebar-collapsed .side-icon{margin:0;}
+}
+@media(max-width:1080px){
+ .sidebar-toggle{display:none;}
+ .topic-choice select{font-size:13px;}
+}
+@media(prefers-reduced-motion:reduce){
+ .app-layout,.sidebar-toggle,.sidebar-toggle svg,.topic-choice button,.side-menu{transition:none!important;}
+}
+
+/* Logo: dùng chữ rõ nét, không để các nét viết tay đè lên nhau ở sidebar hẹp. */
+.side-brand > div {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  line-height: normal;
+  gap: 1px;
+}
+.side-brand strong {
+  display: block;
+  font-family: 'Nunito', 'DM Sans', system-ui, sans-serif;
+  font-size: 12.5px;
+  font-weight: 800;
+  line-height: 1.35;
+  letter-spacing: .025em;
+  white-space: nowrap;
+  font-optical-sizing: auto;
+}
+.side-brand small {
+  display: block;
+  font-family: 'Nunito', 'DM Sans', system-ui, sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1.45;
+  margin-top: 1px;
+  white-space: nowrap;
+}
+.side-brand-mark { flex: 0 0 31px; line-height: 1.5; }
+.side-brand .sidebar-toggle { flex: 0 0 30px; }
+.mobile-title { line-height: 1.4; }
+.mobile-title strong {
+  font-family: 'Nunito', 'DM Sans', system-ui, sans-serif;
+  font-weight: 800;
+  line-height: 1.45;
+  letter-spacing: .035em;
+}
+@media (min-width: 1081px) {
+  body.sidebar-collapsed .side-brand > div { display: none; }
+}
